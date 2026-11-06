@@ -1,0 +1,1986 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trần Kim Danh | Document AI and multimodal retrieval</title>
+  <meta name="description" content="Trần Kim Danh, Computer Science student at RMIT University Vietnam, builds document AI and multimodal retrieval systems. Open to AI engineering internships.">
+  <meta name="author" content="Trần Kim Danh">
+  <meta name="theme-color" content="#E8EBEE">
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Trần Kim Danh">
+  <meta property="og:description" content="Computer Science student at RMIT University Vietnam building document AI and multimodal retrieval systems.">
+  <meta property="og:url" content="https://danh.is-a.dev/">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' shape-rendering='crispEdges'%3E%3Crect width='32' height='32' fill='%23F7F8F9'/%3E%3Cg fill='%232340D8'%3E%3Crect x='6' y='6' width='4' height='4'/%3E%3Crect x='14' y='6' width='4' height='4'/%3E%3Crect x='10' y='10' width='4' height='4'/%3E%3Crect x='18' y='10' width='4' height='4'/%3E%3Crect x='6' y='14' width='4' height='4'/%3E%3Crect x='14' y='14' width='4' height='4'/%3E%3C/g%3E%3Crect x='4' y='21' width='24' height='3' fill='%23FF3D7F'/%3E%3C/svg%3E">
+  <script>
+    (function () {
+      var d = document.documentElement;
+      d.classList.add("js");
+      try { var t = localStorage.getItem("theme"); if (t === "dark" || t === "light") d.setAttribute("data-theme", t); } catch (e) {}
+      var l = null;
+      try { l = localStorage.getItem("lang"); } catch (e) {}
+      if (l === "vi" || (!l && /^vi\b/i.test(navigator.language || ""))) {
+        d.classList.add("i18n-pending");
+        setTimeout(function () { d.classList.remove("i18n-pending"); }, 1200);
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Trần Kim Danh",
+    "alternateName": "Tran Kim Danh",
+    "url": "https://danh.is-a.dev/",
+    "email": "mailto:trankimdanh2007@gmail.com",
+    "affiliation": { "@type": "CollegeOrUniversity", "name": "RMIT University Vietnam" },
+    "knowsAbout": ["Document AI", "Multimodal retrieval", "Machine learning evaluation"],
+    "sameAs": ["https://github.com/Tkd2007"]
+  }
+  </script>
+  <style>
+    /* ================= Tokens ================= */
+    :root {
+      color-scheme: light;
+      --bg: #E8EBEE;
+      --surface: #F7F8F9;
+      --text: #0F1A3D;
+      --muted: #5D6577;
+      --rule: #C9CFD8;
+      --link: #2340D8;
+      --signal: #FF3D7F;
+      --sheet: #F7F8F9;
+      --ink: #0F1A3D;
+      --lift: 0 0 0 1px #C9CFD8, 0 24px 48px -32px rgba(15, 26, 61, .45);
+      --scrim: rgba(15, 26, 61, .32);
+      --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+      --body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0E1531; --surface: #17214B; --text: #E8ECF8; --muted: #9AA5C8; --rule: #2B3868; --link: #A9B8FF;
+      --lift: 0 0 0 1px #2B3868, 0 30px 60px -30px rgba(0, 0, 0, .85);
+      --scrim: rgba(4, 8, 24, .6);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg: #0E1531; --surface: #17214B; --text: #E8ECF8; --muted: #9AA5C8; --rule: #2B3868; --link: #A9B8FF;
+        --lift: 0 0 0 1px #2B3868, 0 30px 60px -30px rgba(0, 0, 0, .85);
+        --scrim: rgba(4, 8, 24, .6);
+      }
+    }
+
+    /* ================= Base ================= */
+    *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html { -webkit-text-size-adjust: 100%; }
+    .i18n-pending body { visibility: hidden; }
+    @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 1.0625rem;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection { background: color-mix(in srgb, var(--signal) 32%, transparent); }
+    a { color: var(--link); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+    a:hover { text-decoration-thickness: 2px; }
+    :focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+    kbd {
+      font-family: var(--body); font-size: .74rem; line-height: 1.2;
+      border: 1px solid var(--rule); background: var(--surface); color: var(--muted);
+      padding: .08rem .38rem;
+    }
+    .frame { width: min(100% - 2.5rem, 76rem); margin-inline: auto; }
+    html:not(.js) .js-only { display: none; }
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+    .skip {
+      position: absolute; left: 1rem; top: -4rem; z-index: 40;
+      background: var(--text); color: var(--bg); padding: .5rem .8rem; text-decoration: none;
+    }
+    .skip:focus { top: 1rem; }
+
+    .btn-link {
+      font: inherit; color: var(--link); background: none; border: 0; padding: 0; cursor: pointer;
+      text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px;
+    }
+    .btn-link:hover { text-decoration-thickness: 2px; }
+
+    .act {
+      display: inline-flex; align-items: center;
+      font: inherit; font-size: .95rem; color: var(--text); text-decoration: none;
+      background: transparent; border: 1px solid var(--text); padding: .6rem 1rem; cursor: pointer;
+      transition: background-color .15s, color .15s;
+    }
+    .act:hover, .act.primary { background: var(--text); color: var(--bg); }
+    .act.primary:hover { background: transparent; color: var(--text); }
+
+    /* ================= Top bar ================= */
+    .top { position: sticky; top: 0; z-index: 20; background: var(--bg); transition: box-shadow .2s ease; }
+    .top.scrolled { box-shadow: 0 1px 0 var(--rule); }
+    .top .frame { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; height: 4rem; }
+    .brand { display: inline-flex; align-items: center; gap: .6rem; color: var(--text); text-decoration: none; font-weight: 600; font-size: .95rem; }
+    .brand svg { width: 16px; height: 16px; flex: none; }
+    .top-right { display: flex; align-items: center; gap: 1.4rem; }
+    .nav { display: flex; gap: 1.5rem; font-size: .9rem; }
+    .nav a { color: var(--text); text-decoration: none; padding-block: .25rem; border-bottom: 1.5px solid transparent; }
+    .nav a:hover { color: var(--link); }
+    .nav a[aria-current="true"] { border-bottom-color: var(--signal); }
+    .cv-link { font-size: .9rem; color: var(--text); text-decoration: none; border-bottom: 1.5px solid var(--signal); padding-block: .2rem; }
+    .lang { display: none; border: 1px solid var(--rule); }
+    .js .lang { display: inline-flex; }
+    .lang button { font: inherit; font-size: .76rem; font-weight: 500; color: var(--muted); background: transparent; border: 0; padding: .3rem .55rem; cursor: pointer; }
+    .lang button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+    .menu-btn {
+      display: none; align-items: center; gap: .55rem;
+      font: inherit; font-size: .85rem; color: var(--text);
+      background: transparent; border: 1px solid var(--rule); padding: .32rem .45rem .32rem .75rem; cursor: pointer;
+    }
+    .js .menu-btn { display: inline-flex; }
+    .menu-btn:hover { border-color: var(--text); }
+
+    /* ================= Hero ================= */
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      gap: clamp(2.5rem, 6vw, 6rem);
+      align-items: center;
+      padding-block: clamp(1rem, 3vw, 2rem) clamp(2rem, 4vw, 3rem);
+    }
+    html:not(.js) .hero { grid-template-columns: 1fr; }
+    html:not(.js) .scan { display: none; }
+
+    .scan { margin: 0; }
+    .sheet {
+      position: relative; aspect-ratio: 4 / 5;
+      background: var(--sheet); box-shadow: var(--lift);
+      cursor: crosshair; touch-action: pan-y; container-type: inline-size;
+    }
+    .sheet canvas, .media canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
+
+    .det { position: absolute; border: 1.5px solid var(--signal); pointer-events: none; opacity: 0; }
+    .det span {
+      position: absolute; left: -1.5px; bottom: 100%;
+      background: var(--signal); color: var(--ink);
+      font-size: clamp(.5rem, 2.05cqi, .64rem); font-weight: 600; line-height: 1;
+      padding: .22em .45em .24em; white-space: nowrap; font-variant-numeric: tabular-nums;
+    }
+    .det.on { animation: snap 360ms cubic-bezier(.2, .8, .2, 1) forwards; }
+    .det.hl { outline: 1.5px solid var(--signal); }
+    @keyframes snap { from { opacity: 0; transform: scale(1.05); } to { opacity: 1; transform: none; } }
+
+    .scan figcaption { font-size: .82rem; color: var(--muted); margin-top: .95rem; max-width: 46ch; }
+    .scan-status { display: block; color: var(--text); font-weight: 600; margin-bottom: .3rem; font-variant-numeric: tabular-nums; }
+    .scan-status:empty { display: none; }
+    .scan-status::before { content: ""; display: inline-block; width: .5rem; height: .5rem; background: var(--signal); margin-right: .5rem; vertical-align: .02em; }
+
+    .links { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 1; }
+    .links path { fill: none; stroke: var(--signal); stroke-width: 1.25; }
+    .links .end { fill: var(--signal); }
+    .links g.hl path { stroke-width: 2.5; }
+
+    .out { min-width: 0; position: relative; z-index: 2; }
+    .roles { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1.25rem; }
+    .roles span { font-size: .78rem; font-weight: 500; border: 1.5px solid var(--signal); padding: .16rem .55rem; }
+    .name {
+      font-family: var(--display); font-stretch: 75%; font-weight: 600;
+      font-size: clamp(3.2rem, 8.6vw, 7.6rem); line-height: .88; letter-spacing: -.02em;
+      margin: 0 0 clamp(1.5rem, 3.5vw, 2.4rem);
+      transition: color .2s;
+    }
+    .name span { display: block; }
+    .name.hl { color: var(--link); }
+
+    .fields { margin: 0; }
+    .row {
+      display: grid; grid-template-columns: 6.5rem 1fr;
+      border-top: 1px solid var(--rule);
+      padding: .75rem .6rem; margin-inline: -.6rem;
+      transition: opacity .45s ease, background-color .2s ease;
+    }
+    .row dt { margin: 0; font-size: .82rem; color: var(--muted); padding-top: .22rem; }
+    .row dd { margin: 0; font-size: 1.1rem; line-height: 1.45; }
+    .row.hl { background: color-mix(in srgb, var(--signal) 8%, transparent); }
+    .linking .row:not(.got) { opacity: .28; }
+
+    .cta { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1.6rem 0 0; }
+    .social { list-style: none; display: flex; flex-wrap: wrap; gap: .3rem 1.4rem; margin: 1.1rem 0 0; padding: 0; font-size: .9rem; }
+    .social a { color: var(--text); }
+
+    /* ================= Stats strip ================= */
+    .stats {
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-block: 1px solid var(--text);
+    }
+    .stat {
+      display: grid; align-content: start; gap: .25rem;
+      padding: 1.25rem 1.25rem 1.4rem;
+      color: var(--text); text-decoration: none;
+      border-left: 1px solid var(--rule);
+      transition: background-color .15s;
+    }
+    .stat:first-child { border-left: 0; }
+    .stat:hover { background: var(--surface); }
+    .stat:hover .px { color: var(--link); }
+    .px { display: block; height: 2.4rem; color: var(--text); font-family: var(--display); font-size: 2.2rem; line-height: 1; transition: color .15s; }
+    .px svg { display: block; height: 100%; width: auto; }
+    .stat-k { font-family: var(--display); font-size: 1.3rem; font-weight: 500; line-height: 1.15; margin-top: .65rem; }
+    .stat-n { font-size: .82rem; color: var(--muted); }
+
+    /* ================= Content blocks ================= */
+    .block {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+      gap: clamp(1rem, 4vw, 3rem);
+      padding-block: clamp(3.5rem, 8vw, 6rem);
+      border-top: 1px solid var(--rule);
+      scroll-margin-top: 4rem;
+    }
+    .stats + .block { border-top: 0; }
+    .block-head { position: sticky; top: 5.5rem; align-self: start; }
+    .block h2 {
+      font-family: var(--display); font-stretch: 75%; font-weight: 500;
+      font-size: clamp(1.9rem, 3.6vw, 2.6rem); line-height: 1; margin: 0; text-wrap: balance;
+    }
+    .count { margin: .6rem 0 0; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+    .prose p { margin: 0 0 1rem; max-width: 62ch; }
+    .prose p:first-child {
+      font-family: var(--display); font-weight: 400;
+      font-size: clamp(1.45rem, 2.6vw, 1.95rem); line-height: 1.25;
+      max-width: 30ch; margin-bottom: 1.5rem; text-wrap: balance;
+    }
+
+    .pill { font-size: .75rem; font-weight: 500; border: 1px solid currentColor; padding: .12rem .55rem; white-space: nowrap; }
+    .pill.live { color: var(--link); }
+    .pill.done { color: var(--text); }
+    .pill.wait { color: var(--muted); }
+
+    .tags { list-style: none; margin: 1rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .4rem; }
+    .tags li { font-size: .78rem; border: 1px solid var(--rule); padding: .1rem .5rem; background: color-mix(in srgb, var(--surface) 55%, transparent); }
+
+    /* ----- Selected work slider ----- */
+    .show-bar { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.75rem; }
+    html:not(.js) .show-bar { display: none; }
+    .showcase { min-width: 0; }
+    .show-tabs { position: relative; display: flex; gap: 1.5rem; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+    .show-tab:focus-visible { outline-offset: -2px; }
+    .show-tabs::-webkit-scrollbar { display: none; }
+    .show-tab {
+      font: inherit; font-size: .92rem; color: var(--muted); white-space: nowrap;
+      background: none; border: 0; border-bottom: 2px solid transparent;
+      padding: .7rem 0; margin-bottom: -1px; cursor: pointer;
+    }
+    .show-tab:hover { color: var(--text); }
+    .show-tab[aria-selected="true"] { color: var(--text); font-weight: 600; border-bottom-color: var(--signal); }
+    .show-nav { display: flex; align-items: center; gap: .5rem; flex: none; padding-bottom: .5rem; }
+    .arrow { width: 2.1rem; height: 2.1rem; display: grid; place-items: center; color: var(--text); background: transparent; border: 1px solid var(--rule); cursor: pointer; }
+    .arrow:hover { border-color: var(--text); }
+    .arrow svg { width: 9px; height: 15px; }
+    .counter { font-family: var(--display); font-size: 1rem; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 4.2rem; text-align: center; }
+    .counter b { color: var(--text); font-weight: 600; }
+
+    .slides { display: grid; grid-template-columns: minmax(0, 1fr); touch-action: pan-y; }
+    .slide { grid-area: 1 / 1; min-width: 0; }
+    .js .slide { opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility 0s linear .25s; }
+    .js .slide.on { opacity: 1; visibility: visible; transition: opacity .25s ease; }
+    html:not(.js) .slide { grid-area: auto; margin-bottom: 4rem; }
+    .slide-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: .5rem 1rem; margin-bottom: .75rem; }
+    .cat { margin: 0 0 .3rem; font-size: .82rem; color: var(--muted); }
+    .slide h3 { font-family: var(--display); font-weight: 500; font-size: clamp(1.6rem, 2.8vw, 2.15rem); line-height: 1.1; margin: 0; }
+    .slide .lede { margin: 0; max-width: 62ch; }
+    .result-line { margin: 1rem 0 0; max-width: 62ch; }
+    .result-line b { font-weight: 600; }
+
+    .story { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(1.25rem, 3vw, 2rem); align-items: start; margin: 1.75rem 0 0; }
+    .media { position: relative; aspect-ratio: 4 / 3; background: var(--sheet); box-shadow: 0 0 0 1px var(--rule); }
+    .steps h4 { margin: 0 0 .55rem; font-size: .82rem; font-weight: 500; color: var(--muted); }
+    .stage-list { border-top: 1px solid var(--rule); }
+    .stage {
+      position: relative;
+      display: grid; grid-template-columns: 1.5rem 1fr auto; align-items: center; gap: .5rem;
+      width: 100%; margin: 0;
+      font: inherit; font-size: .95rem; text-align: left; color: var(--text);
+      background: transparent; border: 0; border-bottom: 1px solid var(--rule);
+      padding: .55rem .6rem .55rem .55rem; cursor: pointer;
+    }
+    .stage:hover { background: color-mix(in srgb, var(--surface) 70%, transparent); }
+    .stage[aria-selected="true"] { background: var(--surface); font-weight: 600; }
+    .stage[aria-selected="true"]::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--signal); }
+    .stage .n { font-size: .78rem; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 400; }
+    .stage .st { display: inline-flex; align-items: center; gap: .4rem; font-size: .74rem; color: var(--muted); font-weight: 400; }
+    .stage .st::before { content: ""; width: .55rem; height: .55rem; border: 1.5px solid currentColor; }
+    .stage[data-status="done"] .st::before { background: currentColor; }
+    .stage[data-status="progress"] .st { color: var(--link); }
+    .stage[data-status="progress"] .st::before { background: linear-gradient(90deg, currentColor 50%, transparent 50%); }
+    .stage-note { margin-top: .9rem; font-size: .95rem; min-height: 5em; }
+    .stage-note p { margin: 0; }
+
+    details.more { margin-top: 1.75rem; border-top: 1px solid var(--rule); }
+    details.more summary {
+      display: flex; align-items: center; gap: .6rem;
+      list-style: none; cursor: pointer; padding: .85rem 0; font-weight: 500;
+    }
+    details.more summary::-webkit-details-marker { display: none; }
+    details.more summary::before {
+      content: ""; width: .7rem; height: .7rem; flex: none;
+      background: linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat, linear-gradient(currentColor, currentColor) center / 2px 100% no-repeat;
+    }
+    details.more[open] summary::before { background: linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat; }
+
+    .result { width: 100%; border-collapse: collapse; margin: .5rem 0 0; font-size: .95rem; font-variant-numeric: tabular-nums; }
+    .result caption { text-align: left; font-size: .85rem; color: var(--muted); padding-bottom: .5rem; }
+    .result th { text-align: left; font-weight: 500; font-size: .8rem; color: var(--muted); border-bottom: 1px solid var(--text); padding: .4rem 1rem .4rem 0; }
+    .result td { border-bottom: 1px solid var(--rule); padding: .6rem 1rem .6rem 0; vertical-align: top; }
+    .result .num { font-weight: 600; white-space: nowrap; }
+    .result .win .num { color: var(--link); }
+
+    .facts { display: grid; grid-template-columns: 6.5rem 1fr; margin: 1.5rem 0 .5rem; font-size: .95rem; }
+    .facts dt, .facts dd { margin: 0; border-top: 1px solid var(--rule); padding-block: .6rem; }
+    .facts dt { font-size: .82rem; color: var(--muted); padding-top: .72rem; }
+    .show-foot { margin: 2.25rem 0 0; font-size: .95rem; }
+
+    /* ----- Quote ----- */
+    .quote {
+      display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: clamp(1rem, 4vw, 3rem);
+      padding-block: clamp(3.5rem, 9vw, 7rem); border-top: 1px solid var(--rule);
+    }
+    .qmark { width: 3.2rem; height: auto; color: var(--signal); margin-top: .7rem; }
+    .quote figure, .quote blockquote { margin: 0; }
+    .quote blockquote p {
+      font-family: var(--display); font-weight: 400;
+      font-size: clamp(2rem, 4.8vw, 3.9rem); line-height: 1.08; letter-spacing: -.01em;
+      margin: 0; max-width: 18ch; text-wrap: balance;
+    }
+    .quote figcaption { margin-top: 1.25rem; font-size: .9rem; color: var(--muted); max-width: 52ch; }
+
+    /* ----- About ----- */
+    .highlights { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 2.25rem 0 0; border-top: 1px solid var(--text); }
+    .highlights > div { padding: 1rem 1rem 0; border-left: 1px solid var(--rule); }
+    .highlights > div:first-child { border-left: 0; padding-left: 0; }
+    .highlights dt { font-family: var(--display); font-weight: 500; font-size: clamp(1.25rem, 2.1vw, 1.6rem); line-height: 1.1; }
+    .highlights dd { margin: .4rem 0 0; font-size: .85rem; color: var(--muted); }
+    .skills { margin-top: 2.75rem; }
+    .skills h3 { margin: 0 0 1rem; font-size: .85rem; font-weight: 500; color: var(--muted); }
+    .skill-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem 2rem; }
+    .skill-groups h4 { margin: 0 0 .5rem; font-size: .95rem; font-weight: 600; }
+    .skill-groups .tags { margin: 0; }
+
+    /* ----- Timelines ----- */
+    .timeline { list-style: none; margin: 0; padding: 0; }
+    .timeline li { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: 0 1rem; }
+    .timeline time { color: var(--muted); font-size: .9rem; font-variant-numeric: tabular-nums; padding-top: .3rem; }
+    .tl-body { position: relative; border-left: 1px solid var(--rule); padding: 0 0 2.2rem 1.6rem; }
+    .timeline li:last-child .tl-body { border-left-color: transparent; padding-bottom: 0; }
+    .tl-body::before { content: ""; position: absolute; left: -.33rem; top: .5rem; width: .6rem; height: .6rem; background: var(--text); }
+    .tl-body.now::before { background: var(--signal); }
+    .timeline h3 { font-family: var(--display); font-weight: 500; font-size: 1.3rem; line-height: 1.2; margin: 0 0 .2rem; }
+    .org { margin: 0; color: var(--muted); font-size: .92rem; }
+    .desc { margin: .5rem 0 0; max-width: 60ch; }
+
+    /* ----- Publications ----- */
+    .pubs { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.75rem; }
+    .pubs li { max-width: 64ch; }
+    .pubs .title { display: block; font-family: var(--display); font-size: 1.32rem; line-height: 1.3; margin-bottom: .3rem; text-wrap: balance; }
+    .pubs .venue { font-size: .88rem; color: var(--muted); }
+    .badge { display: inline-block; font-size: .74rem; font-weight: 500; border: 1px solid currentColor; padding: .04em .5em; margin-left: .45rem; vertical-align: .1em; }
+    .badge.pending { color: var(--muted); }
+    .badge.accepted { color: var(--link); }
+
+    /* ----- Honors ----- */
+    .honors { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2rem; }
+    .honors li { border-top: 1px solid var(--text); padding: .9rem 0 1.7rem; }
+    .honors time { font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .honors h3 { font-family: var(--display); font-weight: 500; font-size: 1.35rem; line-height: 1.2; margin: .35rem 0 .3rem; }
+    .honors p { margin: 0; font-size: .92rem; color: var(--muted); }
+
+    /* ----- News ----- */
+    .news { list-style: none; margin: 0; padding: 0; }
+    .news li { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: 1rem; padding-block: .85rem; border-top: 1px solid var(--rule); }
+    .news li:first-child { border-top: 0; padding-top: 0; }
+    .news time { color: var(--muted); font-size: .9rem; font-variant-numeric: tabular-nums; padding-top: .1rem; }
+    .news p { margin: 0; }
+
+    /* ----- Contact ----- */
+    .contact-line {
+      font-family: var(--display); font-weight: 400;
+      font-size: clamp(1.6rem, 3.4vw, 2.5rem); line-height: 1.2;
+      margin: 0 0 1.75rem; max-width: 24ch; text-wrap: balance;
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: .75rem; margin: 0; }
+
+    .foot {
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: .75rem 2rem;
+      font-size: .82rem; color: var(--muted);
+      padding-block: 2rem 2.5rem; border-top: 1px solid var(--rule);
+    }
+    .foot a { color: var(--muted); }
+
+    /* ================= Command palette ================= */
+    .palette {
+      padding: 0; border: 1px solid var(--rule);
+      background: var(--surface); color: var(--text);
+      width: min(34rem, calc(100vw - 2rem)); margin: 12vh auto auto;
+      box-shadow: 0 30px 60px -30px rgba(15, 26, 61, .55);
+    }
+    .palette::backdrop { background: var(--scrim); }
+    .palette input {
+      width: 100%; font: inherit; font-size: 1.05rem; color: var(--text);
+      background: transparent; border: 0; border-bottom: 1px solid var(--rule);
+      padding: 1rem 1.1rem; outline: none;
+    }
+    .palette input::placeholder { color: var(--muted); }
+    .pal-list { list-style: none; margin: 0; padding: .4rem; max-height: min(64vh, 34rem); overflow: auto; }
+    .pal-group { font-size: .72rem; color: var(--muted); padding: .65rem .7rem .3rem; }
+    .pal-item { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .5rem .7rem; cursor: pointer; font-size: .95rem; }
+    .pal-item[aria-selected="true"] { background: var(--bg); box-shadow: inset 2px 0 0 var(--signal); }
+    .pal-item .hint { font-size: .78rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pal-empty { padding: .8rem .7rem; color: var(--muted); font-size: .9rem; }
+    .pal-foot { display: flex; gap: 1.25rem; margin: 0; padding: .6rem 1.1rem; border-top: 1px solid var(--rule); font-size: .75rem; color: var(--muted); }
+    @media (prefers-reduced-motion: no-preference) {
+      .palette[open] { animation: pal-in 170ms cubic-bezier(.2, .8, .2, 1); }
+      .palette[open]::backdrop { animation: fade-in 170ms ease-out; }
+    }
+    @keyframes pal-in { from { opacity: 0; transform: translateY(-6px) scale(.985); } }
+    @keyframes fade-in { from { opacity: 0; } }
+
+    .toast {
+      position: fixed; left: 50%; bottom: 1.5rem; z-index: 50;
+      transform: translate(-50%, .75rem); opacity: 0; pointer-events: none;
+      background: var(--text); color: var(--bg);
+      font-size: .9rem; padding: .6rem .95rem; max-width: calc(100vw - 2rem);
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* ================= Responsive ================= */
+    @media (max-width: 56rem) {
+      .nav { display: none; }
+    }
+    @media (max-width: 52rem) {
+      .hero { grid-template-columns: 1fr; }
+      .out { order: -1; }
+      .scan { max-width: 28rem; }
+      .links { display: none; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stat:nth-child(3) { border-left: 0; }
+      .stat:nth-child(n + 3) { border-top: 1px solid var(--rule); }
+      .block, .quote { grid-template-columns: 1fr; }
+      .block-head { position: static; }
+      .qmark { width: 2.4rem; margin: 0; }
+      .story { grid-template-columns: 1fr; }
+      .media { max-width: 32rem; }
+      .highlights { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .highlights > div:nth-child(3) { border-left: 0; padding-left: 0; }
+      .highlights > div:nth-child(n + 3) { margin-top: 1rem; border-top: 1px solid var(--rule); }
+    }
+    @media (max-width: 40rem) {
+      .cv-link, .menu-btn kbd { display: none; }
+      .brand { white-space: nowrap; }
+      .top-right { gap: .75rem; }
+      .row { grid-template-columns: 1fr; gap: .15rem; }
+      .facts { grid-template-columns: 5.5rem 1fr; }
+      .skill-groups, .honors { grid-template-columns: 1fr; }
+      .timeline li, .news li { grid-template-columns: 1fr; gap: .1rem; }
+      .timeline time { padding: 0 0 .35rem; }
+      .show-nav .counter { min-width: 3.4rem; }
+    }
+    @media (hover: none) {
+      .menu-btn kbd, .hint, .kb-hint { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .det.on { animation: none; opacity: 1; }
+      .row, .js .slide, .js .slide.on { transition: none; }
+    }
+
+    /* ================= Print ================= */
+    @media print {
+      .top, .skip, .scan, .links, .palette, .toast, .story, .act, .js-only, .kb-hint, .stats, .show-bar, .qmark, .cta, .roles { display: none !important; }
+      body { background: #fff; color: #000; font-size: 11pt; }
+      .hero { display: block; padding: .75rem 0 1rem; }
+      .name, .name.hl { font-size: 40pt; line-height: 1; color: #000; }
+      .row.hl { background: none; }
+      .linking .row:not(.got) { opacity: 1; }
+      .js .slide { opacity: 1 !important; visibility: visible !important; grid-area: auto !important; margin-bottom: 1.5rem; transition: none !important; }
+      .block, .quote { display: block; padding-block: 1.25rem; }
+      .timeline li, .honors li, .pubs li, .news li, .slide-head, .highlights > div, .result tr, .facts dd { break-inside: avoid; }
+      .block-head, .slide-head { break-after: avoid; }
+      .block-head { position: static; margin-bottom: .75rem; }
+      a { color: #000; text-decoration: none; }
+      .contact-line { font-size: 14pt; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+
+  <header class="top">
+    <div class="frame">
+      <a class="brand" href="#top">
+        <svg viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true">
+          <rect width="8" height="8" fill="#F7F8F9"/>
+          <g fill="#2340D8"><rect x="1" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/></g>
+          <rect x="1" y="5" width="6" height="1" fill="#FF3D7F"/>
+        </svg>
+        <span>Trần Kim Danh</span>
+      </a>
+      <div class="top-right">
+        <nav class="nav" aria-label="Sections" data-i18n-attr="aria-label:nav.label">
+          <a href="#work" data-i18n="nav.work">Projects</a>
+          <a href="#publications" data-i18n="nav.pubs">Publications</a>
+          <a href="#honors" data-i18n="nav.honors">Honors</a>
+          <a href="#contact" data-i18n="nav.contact">Contact</a>
+        </nav>
+        <a class="cv-link" href="resume.pdf" data-resume hidden data-i18n="nav.cv">Resume</a>
+        <div class="lang" role="group" aria-label="Language" data-i18n-attr="aria-label:lang.label">
+          <button type="button" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang="vi" aria-pressed="false" lang="vi">VI</button>
+        </div>
+        <button class="menu-btn" type="button" data-open-palette aria-haspopup="dialog"><span data-i18n="menu">Menu</span> <kbd><span class="kbd-mod">⌘</span> K</kbd></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="frame">
+    <!-- ============ Hero ============ -->
+    <section class="hero" id="top" aria-label="Introduction" data-i18n-attr="aria-label:hero.label">
+      <svg class="links" id="links" aria-hidden="true"></svg>
+
+      <figure class="scan">
+        <div class="sheet" id="sheet" role="img" aria-label="Animated scan of a Vietnamese personal-history form for Trần Kim Danh, with the photo, name, studies, focus and internship fields detected" data-i18n-attr="aria-label:sheet.label">
+          <canvas id="hero-canvas"></canvas>
+          <div class="det" data-key="photo" data-r=".07,.14,.245,.28"><span data-i18n="det.photo">photo 0.98</span></div>
+          <div class="det" data-key="name" data-r=".335,.148,.59,.05"><span data-i18n="det.name">name 0.99</span></div>
+          <div class="det" data-key="studies" data-r=".335,.232,.59,.166"><span data-i18n="det.studies">studies 0.97</span></div>
+          <div class="det" data-key="focus" data-r=".07,.453,.86,.044"><span data-i18n="det.focus">focus 0.95</span></div>
+          <div class="det" data-key="open" data-r=".07,.528,.86,.044"><span data-i18n="det.open">open to 0.93</span></div>
+        </div>
+        <figcaption>
+          <span class="scan-status js-only" id="scan-status"></span>
+          <span data-i18n="cap.input">Input: a scanned <i lang="vi">sơ yếu lý lịch</i>, the personal-history form used across Vietnam.</span>
+          <span class="hint" data-i18n="cap.hint">Point at a field to see where it was read from. Move over the page to see the raw scan.</span>
+        </figcaption>
+      </figure>
+
+      <div class="out">
+        <p class="roles"><span data-i18n="role.ai">AI engineering</span><span data-i18n="role.research">Research</span></p>
+        <h1 class="name" data-key="name"><span>Trần</span> <span>Kim Danh</span></h1>
+        <dl class="fields">
+          <div class="row" data-key="studies">
+            <dt><span data-i18n="k.studies">studies</span></dt>
+            <dd data-i18n="v.studies">Computer Science at RMIT University Vietnam, first year</dd>
+          </div>
+          <div class="row" data-key="focus">
+            <dt><span data-i18n="k.focus">focus</span></dt>
+            <dd data-i18n="v.focus">Document AI and multimodal retrieval: systems that read documents, video and data, and turn them into something you can search and check</dd>
+          </div>
+          <div class="row" data-key="open">
+            <dt><span data-i18n="k.open">open to</span></dt>
+            <dd data-i18n="v.open">AI engineering internships. <a href="mailto:trankimdanh2007@gmail.com">Email me</a><span class="js-only"> or <button class="btn-link" type="button" data-copy-email>copy the address</button></span>.</dd>
+          </div>
+        </dl>
+        <p class="cta">
+          <a class="act primary" href="#work" data-i18n="cta.work">View projects</a>
+          <a class="act" href="resume.pdf" data-resume hidden data-i18n="cta.cv">Resume</a>
+          <a class="act" href="#contact" data-i18n="cta.contact">Get in touch</a>
+        </p>
+        <ul class="social" aria-label="Profiles" data-i18n-attr="aria-label:social.label">
+          <li><a href="https://github.com/Tkd2007">GitHub</a></li>
+          <li><a href="mailto:trankimdanh2007@gmail.com">Email</a></li>
+          <!-- Add more profiles in the same format, for example:
+          <li><a href="https://www.linkedin.com/in/YOUR-HANDLE">LinkedIn</a></li>
+          <li><a href="https://scholar.google.com/citations?user=YOUR-ID">Google Scholar</a></li>
+          -->
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ At a glance ============ -->
+    <nav class="stats" aria-label="At a glance" data-i18n-attr="aria-label:stats.label">
+      <a class="stat" href="#work">
+        <span class="px" data-px="03" aria-hidden="true">03</span>
+        <span class="stat-k"><span class="sr">3 </span><span data-i18n="stats.work">Projects</span></span>
+        <span class="stat-n" data-i18n="stats.work.n">Document AI, retrieval, fraud</span>
+      </a>
+      <a class="stat" href="#publications">
+        <span class="px" data-px="02" aria-hidden="true">02</span>
+        <span class="stat-k"><span class="sr">2 </span><span data-i18n="stats.pubs">Publications</span></span>
+        <span class="stat-n" data-i18n="stats.pubs.n">1 accepted, 1 under review</span>
+      </a>
+      <a class="stat" href="#honors">
+        <span class="px" data-px="04" aria-hidden="true">04</span>
+        <span class="stat-k"><span class="sr">4 </span><span data-i18n="stats.honors">Honors</span></span>
+        <span class="stat-n" data-i18n="stats.honors.n">Competitions and academics</span>
+      </a>
+      <a class="stat" href="#contact">
+        <span class="px" data-px="HI" aria-hidden="true">HI</span>
+        <span class="stat-k" data-i18n="stats.contact">Contact</span>
+        <span class="stat-n" data-i18n="stats.contact.n">Open to internships</span>
+      </a>
+    </nav>
+
+    <!-- ============ Selected work ============ -->
+    <section class="block" id="work" aria-labelledby="work-h">
+      <div class="block-head">
+        <h2 id="work-h" data-i18n="w.h">Selected work</h2>
+        <p class="count" data-i18n="w.n">3 projects</p>
+      </div>
+
+      <div class="showcase" id="showcase">
+        <div class="show-bar">
+          <div class="show-tabs" role="tablist" aria-label="Projects" data-i18n-attr="aria-label:w.tabs">
+            <button class="show-tab" type="button" role="tab" id="w-t1" aria-controls="w-p1" aria-selected="true" tabindex="0" data-i18n="w.t1">Financial reports</button>
+            <button class="show-tab" type="button" role="tab" id="w-t2" aria-controls="w-p2" aria-selected="false" tabindex="-1" data-i18n="w.t2">Event retrieval</button>
+            <button class="show-tab" type="button" role="tab" id="w-t3" aria-controls="w-p3" aria-selected="false" tabindex="-1" data-i18n="w.t3">Fraud detection</button>
+          </div>
+          <div class="show-nav">
+            <button class="arrow" type="button" data-dir="-1" aria-label="Previous project" data-i18n-attr="aria-label:w.prev">
+              <svg viewBox="0 0 3 5" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true"><rect x="2" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/></svg>
+            </button>
+            <span class="counter" aria-live="polite"><b>01</b> / 03</span>
+            <button class="arrow" type="button" data-dir="1" aria-label="Next project" data-i18n-attr="aria-label:w.next">
+              <svg viewBox="0 0 3 5" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="slides">
+          <!-- Project 1 -->
+          <article class="slide" id="w-p1" role="tabpanel" aria-labelledby="w-t1">
+            <div class="slide-head">
+              <div>
+                <p class="cat" data-i18n="w1.cat">Document AI</p>
+                <h3 data-i18n="w1.h">Financial report understanding</h3>
+              </div>
+              <span class="pill live" data-i18n="st.progress">In progress</span>
+            </div>
+            <p class="lede" data-i18n="w1.lede">An end-to-end document AI system for Vietnamese financial statements. It pulls structured line items such as total assets, net revenue and profit after tax out of a report, not just its raw text.</p>
+            <ul class="tags" aria-label="Stack" data-i18n-attr="aria-label:stack.label"><li>Python</li><li>DocLayout-YOLO</li><li>Tesseract OCR</li><li>Vision-language models</li><li>OpenRouter</li></ul>
+            <p class="result-line" data-i18n="w1.result"><b>Result:</b> on a real 54-page quarterly report, VLM extraction got all 3 target fields right. The regex baseline got 1.</p>
+
+            <div class="story" data-story="doc">
+              <div class="media" aria-hidden="true"><canvas></canvas></div>
+              <div class="steps">
+                <h4 id="doc-steps" data-i18n="pipe">Pipeline</h4>
+                <div class="stage-list" role="tablist" aria-labelledby="doc-steps" aria-orientation="vertical">
+                  <button class="stage" type="button" role="tab" id="doc-s1" aria-controls="doc-note" aria-selected="false" tabindex="-1" data-status="done"
+                    data-note="Each page of the PDF is rendered to an image that the later stages work from."
+                    data-note-vi="Mỗi trang PDF được chuyển thành ảnh để các bước sau xử lý."><span class="n">1</span><span data-i18n="d.s1">Ingest</span><span class="st" data-i18n="st.done">Done</span></button>
+                  <button class="stage" type="button" role="tab" id="doc-s2" aria-controls="doc-note" aria-selected="false" tabindex="-1" data-status="progress"
+                    data-note="DocLayout-YOLO finds the tables. Pages without one are skipped, and the rest are cropped to the table so later stages see less noise."
+                    data-note-vi="DocLayout-YOLO tìm các bảng. Trang không có bảng bị bỏ qua, trang còn lại được cắt sát vùng bảng để các bước sau ít nhiễu hơn."><span class="n">2</span><span data-i18n="d.s2">Layout</span><span class="st" data-i18n="st.progress">In progress</span></button>
+                  <button class="stage" type="button" role="tab" id="doc-s3" aria-controls="doc-note" aria-selected="false" tabindex="-1" data-status="done"
+                    data-note="Tesseract gives a text baseline. On a real report it dropped Vietnamese diacritics and misread a digit, so extraction doesn't rely on OCR alone."
+                    data-note-vi="Tesseract cho một baseline văn bản. Trên báo cáo thật, nó làm mất dấu tiếng Việt và đọc sai một chữ số, nên bước trích xuất không chỉ dựa vào OCR."><span class="n">3</span><span>OCR</span><span class="st" data-i18n="st.done">Done</span></button>
+                  <button class="stage" type="button" role="tab" id="doc-s4" aria-controls="doc-note" aria-selected="true" tabindex="0" data-status="done"
+                    data-note="A vision-language model reads the table and returns the target line items as structured fields."
+                    data-note-vi="Một mô hình thị giác–ngôn ngữ (VLM) đọc bảng và trả về các chỉ tiêu cần lấy dưới dạng trường có cấu trúc."><span class="n">4</span><span data-i18n="d.s4">Extract</span><span class="st" data-i18n="st.done">Done</span></button>
+                  <button class="stage" type="button" role="tab" id="doc-s5" aria-controls="doc-note" aria-selected="false" tabindex="-1" data-status="planned"
+                    data-note="Planned: rule checks on the extracted values before they're returned."
+                    data-note-vi="Dự kiến: kiểm tra các giá trị trích xuất bằng quy tắc trước khi trả kết quả."><span class="n">5</span><span data-i18n="d.s5">Validate</span><span class="st" data-i18n="st.planned">Planned</span></button>
+                  <button class="stage" type="button" role="tab" id="doc-s6" aria-controls="doc-note" aria-selected="false" tabindex="-1" data-status="planned"
+                    data-note="Planned: an API with monitoring, following the course's reference architecture."
+                    data-note-vi="Dự kiến: một API kèm giám sát, theo kiến trúc tham chiếu của khóa học."><span class="n">6</span><span data-i18n="d.s6">Serve</span><span class="st" data-i18n="st.planned">Planned</span></button>
+                </div>
+                <div class="stage-note" id="doc-note" role="tabpanel" aria-labelledby="doc-s4">
+                  <p>A vision-language model reads the table and returns the target line items as structured fields.</p>
+                </div>
+              </div>
+            </div>
+
+            <details class="more">
+              <summary><span data-i18n="more">Case study details</span></summary>
+              <table class="result">
+                <caption data-i18n="w1.cap">Target fields correct on a real 54-page quarterly financial report</caption>
+                <thead><tr><th scope="col" data-i18n="th.method">Method</th><th scope="col" data-i18n="th.correct">Correct</th><th scope="col" data-i18n="th.what">What happened</th></tr></thead>
+                <tbody>
+                  <tr><td data-i18n="r1.m">Regex baseline</td><td class="num" data-i18n="r1.c">1 of 3</td><td data-i18n="r1.w">One field missing, one silently wrong</td></tr>
+                  <tr class="win"><td data-i18n="r2.m">VLM extraction</td><td class="num" data-i18n="r2.c">3 of 3</td><td data-i18n="r2.w">All values matched the report</td></tr>
+                </tbody>
+              </table>
+              <dl class="facts">
+                <dt data-i18n="f.context">Context</dt><dd data-i18n="f.context.v">Final project, MasterClass AI Document Understanding course</dd>
+                <dt data-i18n="f.next">Next</dt><dd data-i18n="f.next.v">A router that sends simple layouts to OCR and complex ones to the vision-language model</dd>
+              </dl>
+            </details>
+          </article>
+
+          <!-- Project 2 -->
+          <article class="slide" id="w-p2" role="tabpanel" aria-labelledby="w-t2">
+            <div class="slide-head">
+              <div>
+                <p class="cat" data-i18n="w2.cat">Multimodal retrieval</p>
+                <h3 data-i18n="w2.h">Multimedia event retrieval</h3>
+              </div>
+              <span class="pill done" data-i18n="w2.pill">Final round</span>
+            </div>
+            <p class="lede" data-i18n="w2.lede">Search over 177,321 keyframes from 873 news videos. Describe a scene, ask a question about it, or list events in order, and it returns the matching frames.</p>
+            <ul class="tags" aria-label="Stack" data-i18n-attr="aria-label:stack.label"><li>Python</li><li>Qwen3-VL embeddings</li><li>Qdrant</li><li>PP-OCR</li><li>faster-whisper</li></ul>
+            <p class="result-line" data-i18n="w2.result"><b>Outcome:</b> final round of HCMC AI Challenge 2026, and a team paper accepted at MMM 2027.</p>
+
+            <div class="story" data-story="video">
+              <div class="media" aria-hidden="true"><canvas></canvas></div>
+              <div class="steps">
+                <h4 id="vid-steps" data-i18n="pipe">Pipeline</h4>
+                <div class="stage-list" role="tablist" aria-labelledby="vid-steps" aria-orientation="vertical">
+                  <button class="stage" type="button" role="tab" id="vid-s1" aria-controls="vid-note" aria-selected="false" tabindex="-1"
+                    data-note="177,321 keyframes from the organisers, each mapped back to its exact frame in the source video."
+                    data-note-vi="177.321 keyframe do ban tổ chức cung cấp, mỗi keyframe được ánh xạ về đúng khung hình trong video gốc."><span class="n">1</span><span data-i18n="v.s1">Keyframes</span></button>
+                  <button class="stage" type="button" role="tab" id="vid-s2" aria-controls="vid-note" aria-selected="false" tabindex="-1"
+                    data-note="Each keyframe becomes a 2048-dimension vector from Qwen3-VL-Embedding, stored in Qdrant next to speech transcripts and audio."
+                    data-note-vi="Mỗi keyframe thành một vector 2048 chiều từ Qwen3-VL-Embedding, lưu trong Qdrant cùng bản ghi lời nói và âm thanh."><span class="n">2</span><span data-i18n="v.s2">Embed and index</span></button>
+                  <button class="stage" type="button" role="tab" id="vid-s3" aria-controls="vid-note" aria-selected="false" tabindex="-1"
+                    data-note="Dense, keyword and speech search run side by side and are merged with reciprocal rank fusion. A vision-language model then reranks only the top candidates."
+                    data-note-vi="Tìm kiếm vector, từ khóa và lời nói chạy song song rồi được gộp bằng reciprocal rank fusion. Sau đó một VLM chỉ xếp hạng lại nhóm ứng viên đầu."><span class="n">3</span><span data-i18n="v.s3">Search and rerank</span></button>
+                  <button class="stage" type="button" role="tab" id="vid-s4" aria-controls="vid-note" aria-selected="true" tabindex="0"
+                    data-note="For a list of events, dynamic programming picks one frame per event and keeps them in time order."
+                    data-note-vi="Với một chuỗi sự kiện, quy hoạch động chọn một khung hình cho mỗi sự kiện và giữ đúng thứ tự thời gian."><span class="n">4</span><span data-i18n="v.s4">Align events</span></button>
+                </div>
+                <div class="stage-note" id="vid-note" role="tabpanel" aria-labelledby="vid-s4">
+                  <p>For a list of events, dynamic programming picks one frame per event and keeps them in time order.</p>
+                </div>
+              </div>
+            </div>
+
+            <details class="more">
+              <summary><span data-i18n="more">Case study details</span></summary>
+              <dl class="facts">
+                <dt data-i18n="f.part">My part</dt><dd data-i18n="f.part.v">Accuracy for text-based and temporal queries, and research on visual token reduction before VLM calls</dd>
+                <dt data-i18n="f.outcome">Outcome</dt><dd data-i18n="f.outcome.v">Final round of HCMC AI Challenge 2026. The team's paper was accepted at MMM 2027.</dd>
+              </dl>
+            </details>
+          </article>
+
+          <!-- Project 3 -->
+          <article class="slide" id="w-p3" role="tabpanel" aria-labelledby="w-t3">
+            <div class="slide-head">
+              <div>
+                <p class="cat" data-i18n="w3.cat">ML evaluation</p>
+                <h3 data-i18n="w3.h">Leakage-safe fraud detection</h3>
+              </div>
+              <span class="pill wait" data-i18n="st.review">Under review</span>
+            </div>
+            <p class="lede" data-i18n="w3.lede">A temporal evaluation of GP-LightGBM and SSM-XGBoost for credit card fraud detection, set up so no information from the future leaks into training.</p>
+            <ul class="tags" aria-label="Stack" data-i18n-attr="aria-label:stack.label"><li>Python</li><li>LightGBM</li><li>XGBoost</li></ul>
+            <p class="result-line" data-i18n="w3.result"><b>Status:</b> journal article, with me as second author, under review.</p>
+
+            <div class="story" data-story="series">
+              <div class="media" aria-hidden="true"><canvas></canvas></div>
+              <div class="steps">
+                <h4 id="fraud-steps" data-i18n="method">Method</h4>
+                <div class="stage-list" role="tablist" aria-labelledby="fraud-steps" aria-orientation="vertical">
+                  <button class="stage" type="button" role="tab" id="fraud-s1" aria-controls="fraud-note" aria-selected="false" tabindex="-1"
+                    data-note="Transactions stay in the order they happened instead of being shuffled into random splits."
+                    data-note-vi="Giao dịch được giữ theo đúng thứ tự xảy ra thay vì bị xáo trộn để chia ngẫu nhiên."><span class="n">1</span><span data-i18n="r.s1">Keep time order</span></button>
+                  <button class="stage" type="button" role="tab" id="fraud-s2" aria-controls="fraud-note" aria-selected="false" tabindex="-1"
+                    data-note="Models are fit only on the earlier part of the timeline."
+                    data-note-vi="Mô hình chỉ được huấn luyện trên phần đầu của dòng thời gian."><span class="n">2</span><span data-i18n="r.s2">Train on the past</span></button>
+                  <button class="stage" type="button" role="tab" id="fraud-s3" aria-controls="fraud-note" aria-selected="true" tabindex="0"
+                    data-note="They're scored on later transactions, the way a deployed model would meet them, so nothing leaks backwards in time."
+                    data-note-vi="Mô hình được chấm điểm trên các giao dịch về sau, đúng như khi triển khai thật, nên không có thông tin nào rò ngược thời gian."><span class="n">3</span><span data-i18n="r.s3">Test on the future</span></button>
+                </div>
+                <div class="stage-note" id="fraud-note" role="tabpanel" aria-labelledby="fraud-s3">
+                  <p>They're scored on later transactions, the way a deployed model would meet them, so nothing leaks backwards in time.</p>
+                </div>
+              </div>
+            </div>
+
+            <details class="more">
+              <summary><span data-i18n="more">Case study details</span></summary>
+              <dl class="facts">
+                <dt data-i18n="f.role">Role</dt><dd data-i18n="f.role.v">Second author</dd>
+                <dt data-i18n="f.status">Status</dt><dd data-i18n="f.status.v">Journal article, under review</dd>
+              </dl>
+            </details>
+          </article>
+        </div>
+
+        <p class="show-foot"><a href="https://github.com/Tkd2007" data-i18n="w.more">More on GitHub</a></p>
+      </div>
+    </section>
+
+    <!-- ============ Quote ============ -->
+    <section class="quote" aria-label="Quote" data-i18n-attr="aria-label:quote.label">
+      <svg class="qmark" viewBox="0 0 7 4" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true">
+        <rect x="0" y="0" width="2" height="2"/><rect x="4" y="0" width="2" height="2"/><rect x="1" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/>
+      </svg>
+      <figure>
+        <blockquote><p data-i18n="quote.text">The errors that matter are the ones that look right.</p></blockquote>
+        <figcaption data-i18n="quote.cap">A lesson from a regex baseline that returned a wrong number without raising an error.</figcaption>
+      </figure>
+    </section>
+
+    <!-- ============ About ============ -->
+    <section class="block" id="about" aria-labelledby="about-h">
+      <div class="block-head"><h2 id="about-h" data-i18n="about.h">About</h2></div>
+      <div>
+        <div class="prose">
+          <p data-i18n="about.p1">First-year Computer Science student heading toward AI engineering, with a research side.</p>
+          <p data-i18n="about.p2">Most of what I build turns messy input, like scanned financial statements, hours of news video or transaction logs, into structured data a program can query. I care about evaluating these systems honestly: testing on real documents rather than clean benchmarks, and checking that results hold up when the data shifts.</p>
+          <p data-i18n="about.p3">Before RMIT I studied in the specialised English class at Lê Hồng Phong High School for the Gifted in Ho Chi Minh City. I've liked maths for as long as I can remember.</p>
+        </div>
+        <dl class="highlights">
+          <div><dt data-i18n="hl1.k">Highest GPA</dt><dd data-i18n="hl1.v">in my RMIT Foundation Studies stream</dd></div>
+          <div><dt data-i18n="hl2.k">Final round</dt><dd data-i18n="hl2.v">HCMC AI Challenge 2026</dd></div>
+          <div><dt data-i18n="hl3.k">2 papers</dt><dd data-i18n="hl3.v">1 accepted, 1 under review</dd></div>
+          <div><dt data-i18n="hl4.k">Teaching assistant</dt><dd data-i18n="hl4.v">Introduction to Software Engineering</dd></div>
+        </dl>
+        <div class="skills">
+          <h3 data-i18n="skills.h">Skills</h3>
+          <div class="skill-groups">
+            <div><h4 data-i18n="sk1">Languages and data</h4><ul class="tags"><li>Python</li><li>pandas</li><li>NumPy</li></ul></div>
+            <div><h4 data-i18n="sk2">Machine learning</h4><ul class="tags"><li>LightGBM</li><li>XGBoost</li><li>Vision-language models</li><li>OpenRouter</li></ul></div>
+            <div><h4 data-i18n="sk3">Documents and retrieval</h4><ul class="tags"><li>Tesseract OCR</li><li>DocLayout-YOLO</li><li>Qdrant</li></ul></div>
+            <div><h4 data-i18n="sk4">Tools</h4><ul class="tags"><li>Git</li><li>GitHub</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Experience ============ -->
+    <section class="block" id="experience" aria-labelledby="exp-h">
+      <div class="block-head">
+        <h2 id="exp-h" data-i18n="exp.h">Experience</h2>
+        <p class="count" data-i18n="exp.n">3 entries</p>
+      </div>
+      <ol class="timeline">
+        <li>
+          <time>2026</time>
+          <div class="tl-body">
+            <h3 data-i18n="exp1.h">Team member, multimedia retrieval</h3>
+            <p class="org">HCMC AI Challenge 2026</p>
+            <p class="desc" data-i18n="exp1.d">Worked on accuracy for text-based and temporal queries, and researched visual token reduction before VLM calls. The team reached the final round.</p>
+          </div>
+        </li>
+        <li>
+          <time>2026</time>
+          <div class="tl-body">
+            <h3 data-i18n="exp2.h">Team lead</h3>
+            <p class="org">RMIT Hackathon 2026</p>
+            <p class="desc" data-i18n="exp2.d">Led the team to a top 60 finish.</p>
+          </div>
+        </li>
+        <li>
+          <time>2025 – 2026</time>
+          <div class="tl-body">
+            <h3 data-i18n="exp3.h">Teaching assistant</h3>
+            <p class="org" data-i18n="exp3.org">Introduction to Software Engineering, RMIT Foundation Studies</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ Education ============ -->
+    <section class="block" id="education" aria-labelledby="edu-h">
+      <div class="block-head">
+        <h2 id="edu-h" data-i18n="edu.h">Education</h2>
+        <p class="count" data-i18n="edu.n">3 entries</p>
+      </div>
+      <ol class="timeline">
+        <li>
+          <time>2026 – 2029</time>
+          <div class="tl-body now">
+            <h3 data-i18n="edu1.h">Bachelor of Computer Science</h3>
+            <p class="org" data-i18n="edu1.org">RMIT University Vietnam</p>
+            <p class="desc" data-i18n="edu1.d">First year. Expected to graduate in 2029.</p>
+          </div>
+        </li>
+        <li>
+          <time>2025 – 2026</time>
+          <div class="tl-body">
+            <h3 data-i18n="edu2.h">Foundation Studies</h3>
+            <p class="org" data-i18n="edu2.org">RMIT University Vietnam</p>
+            <p class="desc" data-i18n="edu2.d">Certificate of Academic Excellence for the highest GPA in my stream.</p>
+          </div>
+        </li>
+        <li>
+          <time data-i18n="edu3.t">Until 2025</time>
+          <div class="tl-body">
+            <h3 data-i18n="edu3.h">Specialised English class</h3>
+            <p class="org" data-i18n="edu3.org">Lê Hồng Phong High School for the Gifted, Ho Chi Minh City</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ Publications ============ -->
+    <section class="block" id="publications" aria-labelledby="pubs-h">
+      <div class="block-head">
+        <h2 id="pubs-h" data-i18n="pubs.h">Publications</h2>
+        <p class="count" data-i18n="pubs.n">2 papers</p>
+      </div>
+      <ol class="pubs">
+        <li>
+          <span class="title">A Leakage-Safe Temporal Evaluation of GP-LightGBM and SSM-XGBoost for Credit Card Fraud Detection</span>
+          <span class="venue" data-i18n="pub1.venue">Second author. Journal article.</span><span class="badge pending" data-i18n="badge.review">Under review</span>
+        </li>
+        <li>
+          <span class="title" data-i18n="pub2.title">Interactive multimedia retrieval, from our HCMC AI Challenge work</span>
+          <span class="venue" data-i18n="pub2.venue">Co-author. MMM 2027, the International Conference on Multimedia Modeling.</span><span class="badge accepted" data-i18n="badge.accepted">Accepted</span>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ Honors ============ -->
+    <section class="block" id="honors" aria-labelledby="hon-h">
+      <div class="block-head">
+        <h2 id="hon-h" data-i18n="hon.h">Honors</h2>
+        <p class="count" data-i18n="hon.n">4 honors</p>
+      </div>
+      <ul class="honors">
+        <li><time>2026</time><h3>Certificate of Academic Excellence</h3><p data-i18n="hon1.d">RMIT Foundation Studies, highest GPA in my stream</p></li>
+        <li><time>2026</time><h3 data-i18n="hon2.h">Final round</h3><p data-i18n="hon2.d">HCMC AI Challenge 2026, multimedia retrieval track</p></li>
+        <li><time>2026</time><h3>Top 60</h3><p data-i18n="hon3.d">RMIT Hackathon 2026, as team lead</p></li>
+        <li><time data-i18n="hon4.t">Lower secondary</time><h3 data-i18n="hon4.h">Second prize in mathematics</h3></li>
+      </ul>
+    </section>
+
+    <!-- ============ News ============ -->
+    <section class="block" id="news" aria-labelledby="news-h">
+      <div class="block-head">
+        <h2 id="news-h" data-i18n="news.h">News</h2>
+        <p class="count" data-i18n="news.n">4 updates</p>
+      </div>
+      <ol class="news">
+        <li><time datetime="2026-11" data-i18n="news1.t">Nov 2026</time><p data-i18n="news1">This site went live.</p></li>
+        <li><time datetime="2026-10" data-i18n="news2.t">Oct 2026</time><p data-i18n="news2">Started the Bachelor of Computer Science at RMIT University Vietnam.</p></li>
+        <li><time datetime="2026">2026</time><p data-i18n="news3">Our HCMC AI Challenge paper was accepted at MMM 2027.</p></li>
+        <li><time datetime="2026">2026</time><p data-i18n="news4">Reached the final round of HCMC AI Challenge 2026.</p></li>
+      </ol>
+    </section>
+
+    <!-- ============ Contact ============ -->
+    <section class="block" id="contact" aria-labelledby="contact-h">
+      <div class="block-head"><h2 id="contact-h" data-i18n="contact.h">Contact</h2></div>
+      <div>
+        <p class="contact-line" data-i18n="contact.line">I'm looking for an AI engineering internship. Email is the fastest way to reach me.</p>
+        <p class="actions">
+          <a class="act primary" href="mailto:trankimdanh2007@gmail.com">trankimdanh2007@gmail.com</a>
+          <button class="act js-only" type="button" data-copy-email data-i18n="contact.copy">Copy address</button>
+          <a class="act" href="https://github.com/Tkd2007">GitHub</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot frame">
+    <span>© <span id="y">2026</span> Trần Kim Danh</span>
+    <span data-i18n="foot.note">Every image here is drawn live by a small dithering engine. No image files.</span>
+    <span><a href="https://github.com/Tkd2007/Tkd2007.github.io" data-i18n="foot.src">Source</a><span class="js-only kb-hint">&ensp;<span data-i18n="foot.kb">Quick actions:</span> <kbd><span class="kbd-mod">⌘</span> K</kbd></span></span>
+  </footer>
+
+  <dialog class="palette" id="palette" aria-label="Quick actions" data-i18n-attr="aria-label:pal.label">
+    <input id="pal-q" type="text" role="combobox" aria-expanded="true" aria-controls="pal-list" aria-autocomplete="list" placeholder="Type a command, like email or projects" data-i18n-attr="placeholder:pal.ph" autocomplete="off" spellcheck="false">
+    <ul class="pal-list" id="pal-list" role="listbox" aria-label="Actions"></ul>
+    <p class="pal-foot"><span><kbd>↑</kbd> <kbd>↓</kbd> <span data-i18n="pal.move">move</span></span><span><kbd>Enter</kbd> <span data-i18n="pal.run">run</span></span><span><kbd>Esc</kbd> <span data-i18n="pal.close">close</span></span></p>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+  (() => {
+    "use strict";
+    const doc = document.documentElement;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const $ = (s, r = document) => r.querySelector(s);
+    const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+    const EMAIL = "trankimdanh2007@gmail.com";
+    const REPO = "https://github.com/Tkd2007/Tkd2007.github.io";
+    $("#y").textContent = new Date().getFullYear();
+
+    let hero = null;
+    let hasResume = false;
+    const boards = [];
+
+    /* ===================== Vietnamese copy ===================== */
+    // English lives in the HTML. Each [data-i18n] key below swaps in the Vietnamese version.
+    const VI = {
+      "meta.title": "Trần Kim Danh | Document AI và truy xuất đa phương tiện",
+      "skip": "Bỏ qua, tới nội dung chính",
+      "nav.label": "Các mục", "nav.work": "Dự án", "nav.pubs": "Bài báo", "nav.honors": "Thành tích", "nav.contact": "Liên hệ", "nav.cv": "CV",
+      "lang.label": "Ngôn ngữ", "menu": "Menu",
+      "hero.label": "Giới thiệu",
+      "sheet.label": "Hiệu ứng scan một tờ sơ yếu lý lịch của Trần Kim Danh, với các vùng ảnh, họ tên, học tập, lĩnh vực và mong muốn được nhận diện",
+      "det.photo": "ảnh 0.98", "det.name": "họ tên 0.99", "det.studies": "học tập 0.97", "det.focus": "lĩnh vực 0.95", "det.open": "mong muốn 0.93",
+      "cap.input": "Đầu vào: bản scan một tờ <i>sơ yếu lý lịch</i>.",
+      "cap.hint": "Rê chuột vào một trường để xem nó được đọc từ đâu, hoặc rê lên tờ giấy để xem bản scan thô.",
+      "role.ai": "Kỹ thuật AI", "role.research": "Nghiên cứu",
+      "k.studies": "học tập", "k.focus": "lĩnh vực", "k.open": "mong muốn",
+      "v.studies": "Năm nhất ngành Khoa học Máy tính, Đại học RMIT Việt Nam",
+      "v.focus": "Document AI và truy xuất đa phương tiện: hệ thống đọc tài liệu, video và dữ liệu, rồi biến chúng thành thứ có thể tìm kiếm và kiểm chứng",
+      "v.open": `Thực tập AI Engineering. <a href="mailto:trankimdanh2007@gmail.com">Gửi email cho tôi</a><span class="js-only"> hoặc <button class="btn-link" type="button" data-copy-email>sao chép địa chỉ</button></span>.`,
+      "cta.work": "Xem dự án", "cta.cv": "Xem CV", "cta.contact": "Liên hệ",
+      "social.label": "Hồ sơ trực tuyến",
+      "stats.label": "Tổng quan",
+      "stats.work": "Dự án", "stats.work.n": "Document AI, truy xuất, gian lận",
+      "stats.pubs": "Bài báo", "stats.pubs.n": "1 đã nhận đăng, 1 đang phản biện",
+      "stats.honors": "Thành tích", "stats.honors.n": "Thi đấu và học tập",
+      "stats.contact": "Liên hệ", "stats.contact.n": "Đang tìm cơ hội thực tập",
+      "w.h": "Dự án tiêu biểu", "w.n": "3 dự án", "w.tabs": "Dự án",
+      "w.t1": "Báo cáo tài chính", "w.t2": "Truy xuất sự kiện", "w.t3": "Phát hiện gian lận",
+      "w.prev": "Dự án trước", "w.next": "Dự án sau", "stack.label": "Công nghệ",
+      "w1.cat": "Document AI", "w1.h": "Hiểu báo cáo tài chính",
+      "w1.lede": "Hệ thống Document AI end-to-end cho báo cáo tài chính Việt Nam. Hệ thống trích xuất các chỉ tiêu có cấu trúc như tổng tài sản, doanh thu thuần và lợi nhuận sau thuế, chứ không chỉ lấy văn bản thô.",
+      "w1.result": "<b>Kết quả:</b> trên một báo cáo quý thật dài 54 trang, trích xuất bằng VLM đúng cả 3 trường mục tiêu, còn baseline regex chỉ đúng 1.",
+      "pipe": "Quy trình", "method": "Phương pháp",
+      "d.s1": "Nạp dữ liệu", "d.s2": "Bố cục", "d.s4": "Trích xuất", "d.s5": "Kiểm tra", "d.s6": "Triển khai",
+      "st.done": "Xong", "st.progress": "Đang làm", "st.planned": "Dự kiến", "st.review": "Đang phản biện",
+      "more": "Chi tiết dự án",
+      "w1.cap": "Số trường mục tiêu trích xuất đúng trên một báo cáo tài chính quý thật dài 54 trang",
+      "th.method": "Phương pháp", "th.correct": "Đúng", "th.what": "Chi tiết",
+      "r1.m": "Baseline regex", "r1.c": "1/3", "r1.w": "Thiếu một trường, một trường sai mà không báo lỗi",
+      "r2.m": "Trích xuất bằng VLM", "r2.c": "3/3", "r2.w": "Mọi giá trị khớp với báo cáo",
+      "f.context": "Bối cảnh", "f.context.v": "Đồ án cuối khóa MasterClass AI Document Understanding",
+      "f.next": "Tiếp theo", "f.next.v": "Bộ định tuyến gửi trang có bố cục đơn giản sang OCR và trang phức tạp sang VLM",
+      "w2.cat": "Truy xuất đa phương tiện", "w2.h": "Truy xuất sự kiện đa phương tiện", "w2.pill": "Vòng chung kết",
+      "w2.lede": "Tìm kiếm trên 177.321 keyframe từ 873 video tin tức. Mô tả một cảnh, đặt câu hỏi về nó, hoặc liệt kê các sự kiện theo thứ tự, hệ thống sẽ trả về các khung hình khớp.",
+      "w2.result": "<b>Kết quả:</b> vào vòng chung kết HCMC AI Challenge 2026, và bài báo của nhóm được nhận đăng tại MMM 2027.",
+      "v.s1": "Keyframe", "v.s2": "Nhúng và lập chỉ mục", "v.s3": "Tìm kiếm và xếp hạng lại", "v.s4": "Căn chỉnh sự kiện",
+      "f.part": "Phần của tôi", "f.part.v": "Độ chính xác cho truy vấn văn bản và truy vấn theo thời gian, cùng nghiên cứu giảm token hình ảnh trước khi gọi VLM",
+      "f.outcome": "Kết quả", "f.outcome.v": "Vòng chung kết HCMC AI Challenge 2026. Bài báo của nhóm được nhận đăng tại MMM 2027.",
+      "w3.cat": "Đánh giá mô hình ML", "w3.h": "Phát hiện gian lận không rò rỉ dữ liệu",
+      "w3.lede": "Đánh giá theo thời gian cho GP-LightGBM và SSM-XGBoost trong bài toán phát hiện gian lận thẻ tín dụng, được thiết kế để không có thông tin nào từ tương lai rò rỉ vào dữ liệu huấn luyện.",
+      "w3.result": "<b>Trạng thái:</b> bài báo tạp chí, tôi là tác giả thứ hai, đang trong quá trình phản biện.",
+      "r.s1": "Giữ thứ tự thời gian", "r.s2": "Huấn luyện trên quá khứ", "r.s3": "Kiểm tra trên tương lai",
+      "f.role": "Vai trò", "f.role.v": "Tác giả thứ hai", "f.status": "Trạng thái", "f.status.v": "Bài báo tạp chí, đang phản biện",
+      "w.more": "Xem thêm trên GitHub",
+      "quote.label": "Trích dẫn",
+      "quote.text": "Lỗi đáng sợ nhất là lỗi trông như đúng.",
+      "quote.cap": "Bài học từ một baseline regex trả về sai một con số mà không hề báo lỗi.",
+      "about.h": "Giới thiệu",
+      "about.p1": "Sinh viên năm nhất Khoa học Máy tính, theo hướng AI engineering và nghiên cứu.",
+      "about.p2": "Phần lớn những gì tôi xây dựng là biến dữ liệu lộn xộn, như báo cáo tài chính dạng scan, hàng giờ video tin tức hay nhật ký giao dịch, thành dữ liệu có cấu trúc để chương trình truy vấn được. Tôi coi trọng việc đánh giá hệ thống một cách trung thực: thử trên tài liệu thật thay vì benchmark sạch, và kiểm tra xem kết quả có còn đứng vững khi dữ liệu thay đổi hay không.",
+      "about.p3": "Trước RMIT, tôi học lớp chuyên Anh tại Trường THPT chuyên Lê Hồng Phong, TP.HCM. Tôi thích toán từ khi còn nhỏ.",
+      "hl1.k": "GPA cao nhất", "hl1.v": "khối Foundation Studies của tôi tại RMIT",
+      "hl2.k": "Chung kết", "hl2.v": "HCMC AI Challenge 2026",
+      "hl3.k": "2 bài báo", "hl3.v": "1 đã nhận đăng, 1 đang phản biện",
+      "hl4.k": "Trợ giảng", "hl4.v": "Môn Introduction to Software Engineering",
+      "skills.h": "Kỹ năng", "sk1": "Ngôn ngữ và dữ liệu", "sk2": "Học máy", "sk3": "Tài liệu và truy xuất", "sk4": "Công cụ",
+      "exp.h": "Kinh nghiệm", "exp.n": "3 mục",
+      "exp1.h": "Thành viên nhóm, truy xuất đa phương tiện",
+      "exp1.d": "Phụ trách độ chính xác cho truy vấn văn bản và truy vấn theo thời gian, đồng thời nghiên cứu giảm token hình ảnh trước khi gọi VLM. Nhóm vào đến vòng chung kết.",
+      "exp2.h": "Trưởng nhóm", "exp2.d": "Dẫn dắt nhóm vào top 60.",
+      "exp3.h": "Trợ giảng", "exp3.org": "Môn Introduction to Software Engineering, RMIT Foundation Studies",
+      "edu.h": "Học vấn", "edu.n": "3 mục",
+      "edu1.h": "Cử nhân Khoa học Máy tính", "edu1.org": "Đại học RMIT Việt Nam", "edu1.d": "Năm nhất, dự kiến tốt nghiệp năm 2029.",
+      "edu2.h": "Dự bị đại học (Foundation Studies)", "edu2.org": "Đại học RMIT Việt Nam", "edu2.d": "Nhận Certificate of Academic Excellence vì có GPA cao nhất khối.",
+      "edu3.t": "Đến 2025", "edu3.h": "Lớp chuyên Anh", "edu3.org": "Trường THPT chuyên Lê Hồng Phong, TP.HCM",
+      "pubs.h": "Bài báo", "pubs.n": "2 bài",
+      "pub1.venue": "Tác giả thứ hai. Bài báo tạp chí.",
+      "pub2.title": "Truy xuất đa phương tiện tương tác, từ công trình HCMC AI Challenge của nhóm",
+      "pub2.venue": "Đồng tác giả. MMM 2027, International Conference on Multimedia Modeling.",
+      "badge.review": "Đang phản biện", "badge.accepted": "Đã nhận đăng",
+      "hon.h": "Thành tích", "hon.n": "4 thành tích",
+      "hon1.d": "RMIT Foundation Studies, GPA cao nhất khối",
+      "hon2.h": "Vòng chung kết", "hon2.d": "HCMC AI Challenge 2026, bảng truy xuất đa phương tiện",
+      "hon3.d": "RMIT Hackathon 2026, với vai trò trưởng nhóm",
+      "hon4.t": "THCS", "hon4.h": "Giải Nhì môn Toán",
+      "news.h": "Tin mới", "news.n": "4 tin",
+      "news1.t": "Tháng 11/2026", "news1": "Trang web này chính thức hoạt động.",
+      "news2.t": "Tháng 10/2026", "news2": "Bắt đầu chương trình Cử nhân Khoa học Máy tính tại Đại học RMIT Việt Nam.",
+      "news3": "Bài báo từ HCMC AI Challenge của nhóm được nhận đăng tại MMM 2027.",
+      "news4": "Vào vòng chung kết HCMC AI Challenge 2026.",
+      "contact.h": "Liên hệ",
+      "contact.line": "Tôi đang tìm cơ hội thực tập AI Engineering. Email là cách nhanh nhất để liên lạc với tôi.",
+      "contact.copy": "Sao chép địa chỉ",
+      "foot.note": "Mọi hình ảnh trên trang được vẽ trực tiếp bằng một engine dithering nhỏ, không dùng file ảnh.",
+      "foot.src": "Mã nguồn", "foot.kb": "Thao tác nhanh:",
+      "pal.label": "Thao tác nhanh", "pal.ph": "Gõ lệnh, ví dụ email hoặc dự án",
+      "pal.move": "di chuyển", "pal.run": "chọn", "pal.close": "đóng",
+    };
+
+    let lang = "en";
+    const t = (en, vi) => (lang === "vi" ? vi : en);
+    const EN_TITLE = document.title;
+    const i18nEls = $$("[data-i18n]");
+    i18nEls.forEach(el => { el._en = el.innerHTML; });
+    const attrEls = $$("[data-i18n-attr]").map(el => ({
+      el,
+      pairs: el.getAttribute("data-i18n-attr").split(";").map(s => {
+        const [attr, key] = s.split(":").map(x => x.trim());
+        return { attr, key, en: el.getAttribute(attr) };
+      }),
+    }));
+    const noteOf = tab => (lang === "vi" && tab.dataset.noteVi) || tab.dataset.note;
+
+    function applyLang(next) {
+      lang = next === "vi" ? "vi" : "en";
+      doc.setAttribute("lang", lang);
+      i18nEls.forEach(el => {
+        const v = lang === "vi" ? VI[el.dataset.i18n] : undefined;
+        el.innerHTML = v != null ? v : el._en;
+      });
+      attrEls.forEach(({ el, pairs }) => pairs.forEach(({ attr, key, en }) => {
+        const v = lang === "vi" ? VI[key] : undefined;
+        el.setAttribute(attr, v != null ? v : en);
+      }));
+      document.title = lang === "vi" ? VI["meta.title"] : EN_TITLE;
+      $$(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang ? "true" : "false"));
+      $$(".story").forEach(st => {
+        const sel = st.querySelector('[role="tab"][aria-selected="true"]'), p = st.querySelector(".stage-note p");
+        if (sel && p) p.textContent = noteOf(sel);
+      });
+      doc.classList.remove("i18n-pending");
+      if (hero) { hero.place(); hero.renderStatus(); }
+      if (pal.open) renderList();
+    }
+    function setLang(next) {
+      applyLang(next);
+      try { localStorage.setItem("lang", lang); } catch (e) {}
+    }
+
+    /* ===================== Toast ===================== */
+    const toastEl = $("#toast");
+    let toastTimer = 0;
+    function toast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2000);
+    }
+
+    /* ===================== Theme ===================== */
+    const darkMQ = matchMedia("(prefers-color-scheme: dark)");
+    const theme = () => doc.getAttribute("data-theme") || (darkMQ.matches ? "dark" : "light");
+    const metaTheme = $('meta[name="theme-color"]');
+    const syncMeta = () => { metaTheme.setAttribute("content", theme() === "dark" ? "#0E1531" : "#E8EBEE"); };
+    syncMeta();
+    if (darkMQ.addEventListener) darkMQ.addEventListener("change", syncMeta);
+    function toggleTheme() {
+      const next = theme() === "dark" ? "light" : "dark";
+      doc.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch (e) {}
+      syncMeta();
+      toast(next === "dark" ? t("Dark theme on", "Đã bật giao diện tối") : t("Light theme on", "Đã bật giao diện sáng"));
+    }
+
+    /* ===================== Copy email ===================== */
+    async function copyEmail() {
+      try {
+        await navigator.clipboard.writeText(EMAIL);
+        toast(t("Email address copied", "Đã sao chép email"));
+      } catch (e) {
+        const ta = document.createElement("textarea");
+        ta.value = EMAIL; ta.setAttribute("readonly", "");
+        ta.style.cssText = "position:fixed;opacity:0;pointer-events:none";
+        document.body.append(ta); ta.select();
+        let ok = false;
+        try { ok = document.execCommand("copy"); } catch (_) {}
+        ta.remove();
+        toast(ok ? t("Email address copied", "Đã sao chép email") : t("The browser blocked copying. Address: ", "Trình duyệt chặn sao chép. Địa chỉ: ") + EMAIL);
+      }
+    }
+    // delegated, because language switching re-renders some of these buttons
+    document.addEventListener("click", ev => {
+      if (ev.target.closest("[data-copy-email]")) { ev.preventDefault(); copyEmail(); }
+    });
+
+    /* ===================== Resume link (only if resume.pdf exists) ===================== */
+    if (/^https?:$/.test(location.protocol)) {
+      fetch("resume.pdf", { method: "HEAD" }).then(r => {
+        if (r.ok) { hasResume = true; $$("[data-resume]").forEach(el => { el.hidden = false; }); }
+      }).catch(() => {});
+    }
+
+    /* ===================== Top bar ===================== */
+    const topBar = $(".top");
+    const onScroll = () => topBar.classList.toggle("scrolled", scrollY > 4);
+    addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    const navLinks = $$(".nav a");
+    const navIO = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        navLinks.forEach(a => a.hash === "#" + en.target.id ? a.setAttribute("aria-current", "true") : a.removeAttribute("aria-current"));
+      });
+    }, { rootMargin: "-40% 0px -55% 0px" });
+    $$("main > section[id]").forEach(s => navIO.observe(s));
+    $$(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+
+    /* ===================== Pixel glyphs ===================== */
+    const GLYPH = {
+      0: ["111", "101", "101", "101", "111"], 1: ["010", "110", "010", "010", "111"], 2: ["111", "001", "111", "100", "111"],
+      3: ["111", "001", "111", "001", "111"], 4: ["101", "101", "111", "001", "001"], 5: ["111", "100", "111", "001", "111"],
+      6: ["111", "100", "111", "101", "111"], 7: ["111", "001", "010", "010", "010"], 8: ["111", "101", "111", "101", "111"],
+      9: ["111", "101", "111", "001", "111"], H: ["101", "101", "111", "101", "101"], I: ["111", "010", "010", "010", "111"],
+    };
+    function pixelSVG(str) {
+      let x = 0, rects = "";
+      [...str].forEach((ch, i) => {
+        const g = GLYPH[ch];
+        if (!g) return;
+        if (i) x += 1;
+        g.forEach((row, ry) => [...row].forEach((c, rx) => { if (c === "1") rects += `<rect x="${x + rx}" y="${ry}" width="1" height="1"/>`; }));
+        x += g[0].length;
+      });
+      return `<svg viewBox="0 0 ${x} 5" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true">${rects}</svg>`;
+    }
+    $$("[data-px]").forEach(el => { el.innerHTML = pixelSVG(el.dataset.px); });
+
+    /* ===================== Dithering engine ===================== */
+    const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => (v + .5) / 16);
+    const B = (x, y) => BAYER[(x & 3) + ((y & 3) << 2)];
+    const pack = hex => { const n = parseInt(hex.slice(1), 16); return (255 << 24 | (n & 255) << 16 | (n >> 8 & 255) << 8 | n >> 16) >>> 0; };
+    const COL = { paper: pack("#F7F8F9"), ink: pack("#0F1A3D"), riso: pack("#2340D8"), signal: pack("#FF3D7F") };
+    const hash = (x, y, f) => {
+      let h = (Math.imul(x, 374761393) + Math.imul(y, 668265263) + Math.imul(f, -2048144777)) | 0;
+      h = Math.imul(h ^ (h >>> 13), 1274126177);
+      return ((h ^ (h >>> 16)) >>> 0) / 4294967295;
+    };
+    // read: clean ordered dither in ink. raw: grainy dither in riso blue, like an unprocessed scan.
+    const isInk = (d, x, y) => d > .14 && d > B(x, y);
+    const isGrain = (d, x, y, f) => d + .03 > .35 * B(x, y) + .65 * hash(x, y, f);
+
+    function Engine(canvas, draw, cell) {
+      const ctx = canvas.getContext("2d");
+      const e = { W: 0, H: 0, dark: null, img: null, buf: null };
+      e.build = () => {
+        const r = canvas.getBoundingClientRect();
+        e.W = Math.max(16, Math.round(r.width / cell));
+        e.H = Math.max(16, Math.round(r.height / cell));
+        canvas.width = e.W; canvas.height = e.H;
+        const src = document.createElement("canvas");
+        src.width = e.W; src.height = e.H;
+        const s = src.getContext("2d");
+        s.fillStyle = "#fff"; s.fillRect(0, 0, e.W, e.H);
+        draw(s, e.W, e.H);
+        const d = s.getImageData(0, 0, e.W, e.H).data;
+        e.dark = new Float32Array(e.W * e.H);
+        for (let i = 0; i < e.W * e.H; i++) e.dark[i] = 1 - (.2126 * d[i * 4] + .7152 * d[i * 4 + 1] + .0722 * d[i * 4 + 2]) / 255;
+        e.img = ctx.createImageData(e.W, e.H);
+        e.buf = new Uint32Array(e.img.data.buffer);
+      };
+      e.blit = () => ctx.putImageData(e.img, 0, 0);
+      return e;
+    }
+
+    // Pixel helpers on a W x H buffer. Coordinates are fractions of the canvas.
+    function Pix(e, out) {
+      const { W, H, dark } = e;
+      const X = f => Math.round(f * (W - 1)), Y = f => Math.round(f * (H - 1));
+      const p = {
+        X, Y,
+        base(mode) {
+          for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+            const i = y * W + x, d = dark[i];
+            out[i] = mode(x, y) ? (isInk(d, x, y) ? COL.ink : COL.paper) : (isGrain(d, x, y, 3) ? COL.riso : COL.paper);
+          }
+        },
+        px(x, y, c) { if (x >= 0 && y >= 0 && x < W && y < H) out[y * W + x] = c; },
+        hline(x0, x1, y, c, dash) { if (x0 > x1) [x0, x1] = [x1, x0]; for (let x = x0; x <= x1; x++) if (!dash || (x & 2) === 0) p.px(x, y, c); },
+        vline(x, y0, y1, c, dash) { if (y0 > y1) [y0, y1] = [y1, y0]; for (let y = y0; y <= y1; y++) if (!dash || (y & 2) === 0) p.px(x, y, c); },
+        rect(a, b, cc, d, c, dash) {
+          const x0 = X(a), y0 = Y(b), x1 = X(cc), y1 = Y(d);
+          p.hline(x0, x1, y0, c, dash); p.hline(x0, x1, y1, c, dash);
+          p.vline(x0, y0, y1, c, dash); p.vline(x1, y0, y1, c, dash);
+        },
+        fill(a, b, cc, d, c) { for (let y = Y(b); y <= Y(d); y++) for (let x = X(a); x <= X(cc); x++) p.px(x, y, c); },
+        line(a, b, cc, d, c) {
+          let x0 = X(a), y0 = Y(b);
+          const x1 = X(cc), y1 = Y(d), dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+          let err = dx + dy;
+          for (;;) {
+            p.px(x0, y0, c);
+            if (x0 === x1 && y0 === y1) break;
+            const e2 = 2 * err;
+            if (e2 >= dy) { err += dy; x0 += sx; }
+            if (e2 <= dx) { err += dx; y0 += sy; }
+          }
+        },
+        poly(pts, c) { for (let i = 1; i < pts.length; i++) p.line(pts[i - 1][0], pts[i - 1][1], pts[i][0], pts[i][1], c); },
+        elbow(a, b, cc, d, xm, c) { p.poly([[a, b], [xm, b], [xm, d], [cc, d]], c); },
+        arrow(a, fy, cc, c, dash) {
+          const y = Y(fy), x1 = X(cc);
+          p.hline(X(a), x1, y, c, dash);
+          for (let i = 1; i <= 3; i++) { p.px(x1 - i, y - i, c); p.px(x1 - i, y + i, c); }
+        },
+        bracket(a, cc, fy, c) { const y = Y(fy); p.hline(X(a), X(cc), y, c); p.vline(X(a), y, y + 2, c); p.vline(X(cc), y, y + 2, c); },
+        barcode(a, b, cc, d, seed, c) {
+          const y0 = Y(b), y1 = Y(d);
+          for (let x = X(a); x <= X(cc); x += 2) { const h = Math.round((y1 - y0) * (.2 + .8 * hash(x, seed, 11))); p.vline(x, y1 - h, y1, c); }
+        },
+        digit(n, a, b) {
+          const x0 = X(a), y0 = Y(b);
+          for (let y = -1; y <= 5; y++) for (let x = -1; x <= 3; x++) p.px(x0 + x, y0 + y, COL.paper);
+          GLYPH[n].forEach((row, ry) => [...row].forEach((ch, rx) => { if (ch === "1") p.px(x0 + rx, y0 + ry, COL.ink); }));
+        },
+      };
+      return p;
+    }
+
+    /* ===================== Scenes (greyscale sources) ===================== */
+    const F = (px, w = 500, it = false) => `${it ? "italic " : ""}${w} ${Math.max(4, px).toFixed(2)}px "Be Vietnam Pro", system-ui, sans-serif`;
+    const crisp = n => Math.round(n) + .5;
+
+    // Hero: a sơ yếu lý lịch (Vietnamese personal-history form)
+    function sceneProfile(s, W, H) {
+      const u = W / 100, v = H / 100;
+      s.textBaseline = "top";
+      s.textAlign = "center";
+      s.fillStyle = "#000"; s.font = F(6.2 * u, 700);
+      s.fillText("SƠ YẾU LÝ LỊCH", 50 * u, 4 * v);
+      s.fillStyle = "#555"; s.font = F(2.9 * u, 400, true);
+      s.fillText("Dùng cho học sinh, sinh viên", 50 * u, 10 * v);
+      s.textAlign = "left";
+
+      const px = 8 * u, py = 15 * v, pw = 22 * u, ph = 33 * u;
+      s.save(); s.beginPath(); s.rect(px, py, pw, ph); s.clip();
+      let g = s.createLinearGradient(0, py, 0, py + ph);
+      g.addColorStop(0, "#ececec"); g.addColorStop(1, "#b4b4b4");
+      s.fillStyle = g; s.fillRect(px, py, pw, ph);
+      const hx = px + pw / 2, hy = py + ph * .4, hr = pw * .23;
+      s.fillStyle = "#2a2a2a"; s.fillRect(hx - hr * .38, hy + hr * .7, hr * .76, hr * .9);
+      g = s.createLinearGradient(0, py + ph * .66, 0, py + ph);
+      g.addColorStop(0, "#3c3c3c"); g.addColorStop(1, "#0c0c0c");
+      s.fillStyle = g; s.beginPath(); s.ellipse(hx, py + ph * 1.02, pw * .5, ph * .36, 0, 0, Math.PI * 2); s.fill();
+      g = s.createRadialGradient(hx - hr * .35, hy - hr * .4, hr * .08, hx, hy, hr);
+      g.addColorStop(0, "#f2f2f2"); g.addColorStop(1, "#1d1d1d");
+      s.fillStyle = g; s.beginPath(); s.arc(hx, hy, hr, 0, Math.PI * 2); s.fill();
+      s.restore();
+      s.strokeStyle = "#222"; s.lineWidth = 1;
+      s.strokeRect(crisp(px), crisp(py), Math.round(pw), Math.round(ph));
+
+      const field = (label, value, x, y) => {
+        s.fillStyle = "#333"; s.font = F(3.1 * u, 500);
+        s.fillText(label, x, y + .35 * u);
+        const lx = x + s.measureText(label).width + 1.4 * u, max = 92 * u - lx;
+        let size = 3.5 * u;
+        s.font = F(size, 700);
+        while (s.measureText(value).width > max && size > 2 * u) { size -= .1 * u; s.font = F(size, 700); }
+        s.fillStyle = "#000"; s.fillText(value, lx, y);
+        s.fillStyle = "#8a8a8a";
+        const by = Math.round(y + 3.9 * u);
+        for (let dx = lx; dx < 92 * u; dx += 1.6 * u) s.fillRect(Math.round(dx), by, 1, 1);
+      };
+      field("Họ và tên:", "TRẦN KIM DANH", 35 * u, 16 * v);
+      field("Trường:", "RMIT University Vietnam", 35 * u, 24 * v);
+      field("Ngành:", "Computer Science", 35 * u, 30 * v);
+      field("Năm học:", "Năm thứ nhất", 35 * u, 36 * v);
+      field("Lĩnh vực:", "Document AI, Multimodal Retrieval", 8 * u, 46 * v);
+      field("Mong muốn:", "Thực tập AI Engineering", 8 * u, 53.5 * v);
+
+      s.fillStyle = "#000"; s.font = F(3.3 * u, 700);
+      s.fillText("QUÁ TRÌNH HỌC TẬP", 8 * u, 61 * v);
+      const tx = 8 * u, tw = 84 * u, top = 65.5 * v, rh = 5 * v, cx = 30 * u;
+      s.fillStyle = "#3a3a3a"; s.fillRect(tx, top, tw, rh);
+      s.fillStyle = "#fff"; s.font = F(2.9 * u, 600);
+      s.fillText("Bậc học", tx + 2 * u, top + 1.2 * v);
+      s.fillText("Trường / Chương trình", cx + 2 * u, top + 1.2 * v);
+      [["Đại học", "RMIT University Vietnam"], ["Dự bị", "RMIT Foundation Studies"], ["THPT", "Chuyên Lê Hồng Phong, TP.HCM"]].forEach(([a, b], k) => {
+        const y = top + rh * (k + 1);
+        if (k === 1) { s.fillStyle = "#ececec"; s.fillRect(tx, y, tw, rh); }
+        s.fillStyle = "#222"; s.font = F(2.9 * u, 500);
+        s.fillText(a, tx + 2 * u, y + 1.2 * v);
+        s.fillText(b, cx + 2 * u, y + 1.2 * v);
+      });
+      s.strokeStyle = "#555"; s.lineWidth = 1;
+      s.strokeRect(crisp(tx), crisp(top), Math.round(tw), Math.round(rh * 4));
+      s.beginPath(); s.moveTo(crisp(cx), top); s.lineTo(crisp(cx), top + rh * 4); s.stroke();
+
+      s.fillStyle = "#444"; s.font = F(2.8 * u, 400, true);
+      s.fillText("Ngày 06 tháng 11 năm 2026", 8 * u, 89 * v);
+      s.textAlign = "center"; s.fillStyle = "#000"; s.font = F(3 * u, 700);
+      s.fillText("Người khai", 76 * u, 88 * v);
+      s.font = F(2.7 * u, 500);
+      s.fillText("Trần Kim Danh", 76 * u, 96.3 * v);
+      s.textAlign = "left";
+      s.strokeStyle = "#111"; s.lineWidth = Math.max(1, .55 * u); s.lineCap = "round"; s.lineJoin = "round";
+      s.beginPath();
+      s.moveTo(64 * u, 94 * v);
+      s.bezierCurveTo(66 * u, 89 * v, 69 * u, 89 * v, 68 * u, 94.5 * v);
+      s.bezierCurveTo(67.5 * u, 96 * v, 71 * u, 90 * v, 73 * u, 92.5 * v);
+      s.bezierCurveTo(74.5 * u, 94.5 * v, 76 * u, 90.5 * v, 78 * u, 92 * v);
+      s.bezierCurveTo(80 * u, 93.5 * v, 82 * u, 90 * v, 84 * u, 91.5 * v);
+      s.bezierCurveTo(85.5 * u, 92.5 * v, 87 * u, 93 * v, 89 * u, 91 * v);
+      s.stroke();
+      s.beginPath(); s.moveTo(65 * u, 95.6 * v); s.quadraticCurveTo(77 * u, 94 * v, 88 * u, 95.2 * v); s.stroke();
+    }
+
+    // Project 1: a financial statement page, with room on the right for extracted fields
+    const DOC_LW = [.19, .14, .22, .12, .17, .2, .16];
+    const docRow = i => [.095, .335 + i * .075 + .006, .485, .335 + (i + 1) * .075 - .006];
+    function sceneDoc(s, W, H) {
+      const X = f => f * W, Y = f => f * H;
+      s.strokeStyle = "#8a8a8a"; s.lineWidth = 1;
+      s.strokeRect(crisp(X(.06)), crisp(Y(.06)), Math.round(X(.46)), Math.round(Y(.88)));
+      s.fillStyle = "#111"; s.fillRect(X(.09), Y(.1), X(.3), Y(.045));
+      s.fillStyle = "#9a9a9a"; s.fillRect(X(.09), Y(.165), X(.2), Y(.022));
+      const g = s.createRadialGradient(X(.43), Y(.115), 1, X(.44), Y(.13), X(.032));
+      g.addColorStop(0, "#efefef"); g.addColorStop(1, "#1a1a1a");
+      s.fillStyle = g; s.beginPath(); s.arc(X(.44), Y(.13), X(.032), 0, Math.PI * 2); s.fill();
+      s.fillStyle = "#3a3a3a"; s.fillRect(X(.09), Y(.27), X(.4), Y(.065));
+      s.fillStyle = "#fff"; s.fillRect(X(.105), Y(.292), X(.1), Y(.022)); s.fillRect(X(.39), Y(.292), X(.08), Y(.022));
+      for (let i = 0; i < 7; i++) {
+        const y = .335 + i * .075, last = i === 6;
+        if (i % 2) { s.fillStyle = "#ededed"; s.fillRect(X(.09), Y(y), X(.4), Y(.075)); }
+        s.fillStyle = last ? "#000" : "#4a4a4a";
+        s.fillRect(X(.105), Y(y + .026), X(DOC_LW[i]), Y(last ? .03 : .022));
+        s.fillRect(X(.39), Y(y + .026), X(.08), Y(last ? .03 : .022));
+      }
+      s.fillStyle = "#000"; s.fillRect(X(.09), Y(.86), X(.4), Math.max(1, Y(.006)));
+      s.fillStyle = "#b0b0b0"; s.fillRect(X(.09), Y(.895), X(.28), Y(.015));
+    }
+
+    // Project 2: six keyframes from news video
+    const VCOLS = [[.05, .33], [.36, .64], [.67, .95]], VROWS = [[.07, .38], [.53, .84]];
+    const vframe = k => { const c = VCOLS[k % 3], r = VROWS[(k / 3) | 0]; return [c[0], r[0], c[1], r[1]]; };
+    const KINDS = ["anchor", "sun", "mountains", "crowd", "city", "road"];
+    function drawFrame(s, x, y, w, h, kind) {
+      const lin = (y0, y1, c0, c1) => { const g = s.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, c0); g.addColorStop(1, c1); return g; };
+      s.save(); s.beginPath(); s.rect(x, y, w, h); s.clip();
+      s.fillStyle = lin(y, y + h, "#dcdcdc", "#707070"); s.fillRect(x, y, w, h);
+      if (kind === "anchor") {
+        s.fillStyle = lin(y, y + h, "#c4c4c4", "#7a7a7a"); s.fillRect(x, y, w, h);
+        const cx = x + w * .5, hr = h * .15;
+        s.fillStyle = "#1c1c1c"; s.beginPath(); s.ellipse(cx, y + h * .95, w * .24, h * .34, 0, 0, Math.PI * 2); s.fill();
+        const g = s.createRadialGradient(cx - hr * .3, y + h * .38 - hr * .35, hr * .1, cx, y + h * .38, hr);
+        g.addColorStop(0, "#efefef"); g.addColorStop(1, "#202020");
+        s.fillStyle = g; s.beginPath(); s.arc(cx, y + h * .38, hr, 0, Math.PI * 2); s.fill();
+        s.fillStyle = "#2b2b2b"; s.fillRect(x, y + h * .8, w, h * .2);
+        s.fillStyle = "#000"; s.fillRect(x + w * .05, y + h * .64, w * .62, h * .11);
+        s.fillStyle = "#fff"; s.fillRect(x + w * .08, y + h * .675, w * .38, h * .04);
+      } else if (kind === "sun") {
+        s.fillStyle = lin(y, y + h * .7, "#f4f4f4", "#9a9a9a"); s.fillRect(x, y, w, h * .7);
+        const g = s.createRadialGradient(x + w * .62, y + h * .5, 1, x + w * .62, y + h * .5, h * .38);
+        g.addColorStop(0, "#ffffff"); g.addColorStop(.4, "#e6e6e6"); g.addColorStop(1, "rgba(160,160,160,0)");
+        s.fillStyle = g; s.fillRect(x, y, w, h * .7);
+        s.fillStyle = lin(y + h * .7, y + h, "#3a3a3a", "#0f0f0f"); s.fillRect(x, y + h * .7, w, h * .3);
+        s.fillStyle = "#cfcfcf";
+        for (let i = 0; i < 4; i++) s.fillRect(x + w * (.5 + i * .03), y + h * (.75 + i * .055), w * (.24 - i * .05), Math.max(1, h * .02));
+      } else if (kind === "mountains") {
+        s.fillStyle = lin(y, y + h, "#efefef", "#bdbdbd"); s.fillRect(x, y, w, h);
+        const ridge = (base, amp, f, col) => {
+          s.fillStyle = col; s.beginPath(); s.moveTo(x, y + h);
+          for (let i = 0; i <= 12; i++) s.lineTo(x + i * w / 12, y + h * (base + amp * Math.sin(i * f + base * 9)));
+          s.lineTo(x + w, y + h); s.fill();
+        };
+        ridge(.5, .16, 1.3, "#8a8a8a"); ridge(.68, .12, 1.9, "#2a2a2a");
+      } else if (kind === "crowd") {
+        s.fillStyle = lin(y, y + h, "#e2e2e2", "#9c9c9c"); s.fillRect(x, y, w, h);
+        for (let row = 0; row < 2; row++) for (let i = 0; i < 7; i++) {
+          const px = x + w * (.06 + i * .145 + row * .07), base = y + h * (row ? 1.02 : .84), hh = h * (.36 + .06 * ((i * 3 + row) % 3));
+          s.fillStyle = row ? "#0e0e0e" : "#555";
+          s.beginPath(); s.arc(px, base - hh, h * .075, 0, Math.PI * 2); s.fill();
+          s.fillRect(px - h * .085, base - hh + h * .07, h * .17, hh);
+        }
+      } else if (kind === "city") {
+        s.fillStyle = lin(y, y + h, "#f6f6f6", "#a8a8a8"); s.fillRect(x, y, w, h);
+        [[.02, .45, .14], [.17, .25, .12], [.3, .55, .16], [.47, .18, .11], [.59, .4, .15], [.75, .3, .1], [.86, .5, .13]].forEach(([bx, by, bw], i) => {
+          s.fillStyle = i % 2 ? "#333" : "#555"; s.fillRect(x + w * bx, y + h * by, w * bw, h * (1 - by));
+          s.fillStyle = "#d8d8d8";
+          for (let wy = by + .06; wy < .95; wy += .09) for (let wx = bx + .02; wx < bx + bw - .02; wx += .04)
+            if (((wx * 97 + wy * 31) | 0) % 3) s.fillRect(x + w * wx, y + h * wy, Math.max(1, w * .015), Math.max(1, h * .035));
+        });
+      } else if (kind === "road") {
+        s.fillStyle = lin(y, y + h * .45, "#f2f2f2", "#b8b8b8"); s.fillRect(x, y, w, h * .45);
+        s.fillStyle = lin(y + h * .45, y + h, "#8a8a8a", "#3a3a3a"); s.fillRect(x, y + h * .45, w, h * .55);
+        s.fillStyle = "#1a1a1a"; s.beginPath();
+        s.moveTo(x + w * .46, y + h * .45); s.lineTo(x + w * .54, y + h * .45); s.lineTo(x + w * .92, y + h); s.lineTo(x + w * .08, y + h); s.fill();
+        s.fillStyle = "#e8e8e8";
+        for (let i = 0; i < 4; i++) { const k = i / 4; s.fillRect(x + w * (.495 - k * .01), y + h * (.47 + k * .5), Math.max(1, w * (.01 + k * .02)), h * .07); }
+      }
+      s.restore();
+      s.strokeStyle = "#000"; s.lineWidth = 1;
+      s.strokeRect(crisp(x), crisp(y), Math.round(w) - 1, Math.round(h) - 1);
+    }
+    function sceneVideo(s, W, H) {
+      KINDS.forEach((kind, k) => { const [a, b, c, d] = vframe(k); drawFrame(s, a * W, b * H, (c - a) * W, (d - b) * H, kind); });
+    }
+
+    // Project 3: a transaction series with a few sharp anomalies
+    const SER = (() => {
+      const pts = [], N = 48;
+      for (let k = 0; k < N; k++) {
+        let y = .6 + .045 * Math.sin(k * .55) + .03 * Math.sin(k * 1.9 + 1);
+        if ([9, 21, 33, 42].includes(k)) y = .2 + (k % 2) * .06;
+        pts.push([.06 + k * (.88 / (N - 1)), y]);
+      }
+      return pts;
+    })();
+    const SPLIT = .62;
+    function sceneSeries(s, W, H) {
+      const X = f => f * W, Y = f => f * H;
+      const g = s.createLinearGradient(0, Y(.18), 0, Y(.82));
+      g.addColorStop(0, "#8c8c8c"); g.addColorStop(1, "#ffffff");
+      s.fillStyle = g; s.beginPath(); s.moveTo(X(SER[0][0]), Y(.82));
+      SER.forEach(([a, b]) => s.lineTo(X(a), Y(b)));
+      s.lineTo(X(SER[SER.length - 1][0]), Y(.82)); s.closePath(); s.fill();
+      s.strokeStyle = "#000"; s.lineWidth = Math.max(1, W * .006); s.lineJoin = "round";
+      s.beginPath(); SER.forEach(([a, b], k) => k ? s.lineTo(X(a), Y(b)) : s.moveTo(X(a), Y(b))); s.stroke();
+      s.fillStyle = "#000"; s.fillRect(X(.06), Y(.82), X(.88), Math.max(1, Y(.008)));
+    }
+
+    /* ===================== Stage renderers ===================== */
+    const pad = ([a, b, c, d], k = .012) => [a - k, b - k, c + k, d + k];
+    const docExtract = p => {
+      p.base(() => 1);
+      [1, 3, 6].forEach((r, j) => {
+        const [a, b, c, d] = docRow(r), fy = .29 + j * .14;
+        p.rect(a, b, c, d, COL.signal);
+        p.fill(.6, fy, .69, fy + .022, COL.riso);
+        p.fill(.71, fy, .87, fy + .022, COL.ink);
+        p.elbow(c, (b + d) / 2, .595, fy + .011, .515 + j * .025, COL.signal);
+      });
+    };
+    const inFrames = (p, ks) => (x, y) => ks.some(k => { const [a, b, c, d] = vframe(k); return x >= p.X(a) && x <= p.X(c) && y >= p.Y(b) && y <= p.Y(d); });
+    const vecs = p => KINDS.forEach((_, k) => { const [a, , c, d] = vframe(k); p.barcode(a + .008, d + .025, c - .008, d + .075, k, COL.riso); });
+    const ranked = (p, ks) => ks.forEach((k, j) => { const f = vframe(k); p.rect(...pad(f, .01), COL.signal); p.digit(j + 1, f[0] + .015, f[1] + .035); });
+
+    const STAGES = {
+      doc: [
+        p => p.base(() => 0),
+        p => {
+          p.base(() => 0);
+          p.rect(...pad([.09, .1, .39, .187]), COL.signal);
+          p.rect(...pad([.405, .085, .475, .175], .006), COL.signal);
+          p.rect(...pad([.09, .27, .49, .86]), COL.signal);
+        },
+        p => {
+          p.base(() => 1);
+          p.hline(p.X(.09), p.X(.39), p.Y(.155), COL.riso);
+          for (let i = 0; i < 7; i++) {
+            const y = p.Y(.335 + i * .075 + .026 + (i === 6 ? .03 : .022) + .012);
+            p.hline(p.X(.105), p.X(.105 + DOC_LW[i]), y, COL.riso);
+            p.hline(p.X(.39), p.X(.47), y, COL.riso);
+          }
+          [.3, .22, .33, .18, .28, .31, .2, .26, .15].forEach((w, i) => p.fill(.6, .22 + i * .05, .6 + w, .232 + i * .05, COL.riso));
+        },
+        docExtract,
+        p => { docExtract(p); p.rect(.575, .24, .9, .64, COL.signal, true); },
+        p => { docExtract(p); p.rect(.575, .24, .9, .64, COL.signal, true); p.arrow(.9, .44, .975, COL.signal, true); },
+      ],
+      video: [
+        p => p.base(() => 0),
+        p => { p.base(() => 1); vecs(p); },
+        p => { p.base(inFrames(p, [4, 1, 2])); vecs(p); ranked(p, [4, 1, 2]); },
+        p => {
+          p.base(inFrames(p, [0, 4, 5])); vecs(p); ranked(p, [0, 4, 5]);
+          p.poly([[.34, .225], [.345, .225], [.345, .495], [.5, .495], [.5, .52]], COL.signal);
+        },
+      ],
+      series: [
+        p => { p.base(() => 0); p.arrow(.06, .92, .94, COL.ink); },
+        p => {
+          p.base(x => x < p.X(SPLIT));
+          p.vline(p.X(SPLIT), p.Y(.08), p.Y(.88), COL.signal, true);
+          p.bracket(.06, SPLIT - .015, .07, COL.ink);
+        },
+        p => {
+          p.base(() => 1);
+          p.vline(p.X(SPLIT), p.Y(.08), p.Y(.88), COL.signal, true);
+          p.bracket(.06, SPLIT - .015, .07, COL.ink);
+          p.bracket(SPLIT + .015, .94, .07, COL.signal);
+          [33, 42].forEach(k => { const [sx, sy] = SER[k]; p.rect(sx - .03, sy - .05, sx + .03, .66, COL.signal); });
+        },
+      ],
+    };
+    const SCENES = { doc: sceneDoc, video: sceneVideo, series: sceneSeries };
+
+    /* ===================== Hero ===================== */
+    function Hero() {
+      const heroEl = $(".hero"), sheet = $("#sheet"), svg = $("#links"), outCol = $(".out"), statusEl = $("#scan-status");
+      const e = Engine($("#hero-canvas"), sceneProfile, 2);
+      const wide = matchMedia("(min-width: 52.01rem)");
+      const NS = "http://www.w3.org/2000/svg";
+      const targets = { name: $(".name") };
+      $$(".row[data-key]").forEach(r => { targets[r.dataset.key] = r; });
+
+      const boxes = $$(".det", sheet).map(el => {
+        const [x, y, w, h] = el.dataset.r.split(",").map(Number);
+        Object.assign(el.style, { left: x * 100 + "%", top: y * 100 + "%", width: w * 100 + "%", height: h * 100 + "%" });
+        return { el, x, y, w, h, key: el.dataset.key, hit: false };
+      });
+      const linked = boxes.filter(b => targets[b.key]);
+
+      const groups = {};
+      linked.forEach(b => {
+        const g = document.createElementNS(NS, "g");
+        const path = document.createElementNS(NS, "path");
+        const a = document.createElementNS(NS, "rect"), z = document.createElementNS(NS, "rect");
+        [a, z].forEach(r => { r.setAttribute("width", 5); r.setAttribute("height", 5); r.setAttribute("class", "end"); });
+        g.append(path, a, z); g.style.display = "none"; svg.append(g);
+        groups[b.key] = { g, path, a, z };
+      });
+
+      let scanY = -1, done = false, lens = null, raf = 0, lensRaf = 0;
+      let status = { phase: "idle" };
+
+      function renderStatus() {
+        if (status.phase === "reading") statusEl.textContent = t(`Reading the page, ${status.p}%`, `Đang đọc trang, ${status.p}%`);
+        else if (status.phase === "done") {
+          const n = linked.length;
+          if (status.secs == null) statusEl.textContent = t(`${n} fields extracted`, `Đã trích xuất ${n} trường`);
+          else {
+            const s = status.secs.toFixed(1);
+            statusEl.textContent = t(`${n} fields extracted in ${s} s`, `Đã trích xuất ${n} trường trong ${s.replace(".", ",")} giây`);
+          }
+        } else statusEl.textContent = "";
+      }
+
+      function draw(frame) {
+        const { W, H, dark, buf } = e;
+        const lr2 = lens ? lens.r * lens.r : 0;
+        for (let y = 0; y < H; y++) {
+          const beam = !done && Math.abs(y - scanY) < 1.5, read = y < scanY;
+          for (let x = 0; x < W; x++) {
+            const i = y * W + x, d = dark[i];
+            let c;
+            if (beam) c = (d > .04 || hash(x, y, frame) > .55) ? COL.signal : COL.paper;
+            else if (read && !(lens && (x - lens.x) ** 2 + (y - lens.y) ** 2 < lr2)) c = isInk(d, x, y) ? COL.ink : COL.paper;
+            else c = isGrain(d, x, y, frame) ? COL.riso : COL.paper;
+            buf[i] = c;
+          }
+        }
+        e.blit();
+      }
+
+      function geometry() {
+        const hr = heroEl.getBoundingClientRect(), sr = sheet.getBoundingClientRect(), orr = outCol.getBoundingClientRect();
+        const items = linked.map(b => {
+          const br = b.el.getBoundingClientRect(), tg = targets[b.key];
+          const anchor = tg.querySelector("dt span") || tg.querySelector("span") || tg;
+          const tr = anchor.getBoundingClientRect();
+          return { key: b.key, sx: br.right - hr.left, sy: br.top + br.height / 2 - hr.top, ex: tr.left - hr.left - 10, ey: tr.top + tr.height / 2 - hr.top };
+        }).sort((m, n) => m.sy - n.sy);
+        const x0 = sr.right - hr.left, x1 = orr.left - hr.left - 16, n = items.length;
+        // topmost source takes the rightmost lane, so downward connectors never cross
+        items.forEach((it, k) => { it.lx = x0 + (x1 - x0) * (n - k) / (n + 1); });
+        return items;
+      }
+      function pathD({ sx, sy, lx, ex, ey }) {
+        const dy = ey - sy;
+        if (Math.abs(dy) < 1) return `M${sx},${sy}H${ex}`;
+        const s = Math.sign(dy), r = Math.max(0, Math.min(8, Math.abs(dy) / 2, (lx - sx) / 2, (ex - lx) / 2));
+        return `M${sx},${sy}H${lx - r}Q${lx},${sy} ${lx},${sy + s * r}V${ey - s * r}Q${lx},${ey} ${lx + r},${ey}H${ex}`;
+      }
+      function place() {
+        if (!wide.matches) return;
+        geometry().forEach(it => {
+          const G = groups[it.key];
+          G.path.setAttribute("d", pathD(it));
+          G.a.setAttribute("x", it.sx - 2.5); G.a.setAttribute("y", it.sy - 2.5);
+          G.z.setAttribute("x", it.ex - 2.5); G.z.setAttribute("y", it.ey - 2.5);
+        });
+      }
+      function link(key) {
+        const G = groups[key];
+        if (!G || !wide.matches) return;
+        place();
+        G.g.style.display = "";
+        if (reduce || !G.path.animate) return;
+        const len = G.path.getTotalLength();
+        G.path.style.strokeDasharray = len;
+        const anim = G.path.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: 480, easing: "cubic-bezier(.2,.7,.2,1)", fill: "forwards" });
+        anim.onfinish = () => { G.path.style.strokeDasharray = ""; anim.cancel(); };
+        G.z.animate([{ opacity: 0 }, { opacity: 0, offset: .75 }, { opacity: 1 }], { duration: 480 });
+      }
+      function detect(b) {
+        if (b.hit) return;
+        b.hit = true;
+        b.el.classList.add("on");
+        const tg = targets[b.key];
+        if (!tg) return;
+        link(b.key);
+        if (reduce || !wide.matches) tg.classList.add("got");
+        else setTimeout(() => tg.classList.add("got"), 280);
+      }
+
+      function run() {
+        cancelAnimationFrame(raf);
+        lens = null;
+        boxes.forEach(b => { b.hit = false; b.el.classList.remove("on", "hl"); });
+        Object.values(groups).forEach(G => { G.g.style.display = "none"; G.g.classList.remove("hl"); });
+        Object.values(targets).forEach(tg => tg.classList.remove("got", "hl"));
+        heroEl.classList.toggle("linking", wide.matches && !reduce);
+        if (reduce) {
+          done = true; scanY = Infinity; draw(0); boxes.forEach(detect);
+          status = { phase: "done", secs: null }; renderStatus();
+          return;
+        }
+        done = false; scanY = -1;
+        status = { phase: "reading", p: 0 }; renderStatus();
+        const t0 = performance.now(), delay = 350, dur = 2100;
+        const step = now => {
+          const p = Math.min(1, Math.max(0, (now - t0 - delay) / dur));
+          scanY = (1 - Math.pow(1 - p, 1.8)) * (e.H + 4) - 2;
+          boxes.forEach(b => { if (!b.hit && scanY >= (b.y + b.h) * e.H) detect(b); });
+          const pct = Math.round(p * 100);
+          if (pct !== status.p && p < 1) { status.p = pct; renderStatus(); }
+          if (p >= 1) {
+            done = true; scanY = Infinity; boxes.forEach(detect);
+            status = { phase: "done", secs: (now - t0 - delay) / 1000 }; renderStatus();
+          }
+          draw(Math.floor(now / 70));
+          if (!done) raf = requestAnimationFrame(step);
+        };
+        draw(0);
+        raf = requestAnimationFrame(step);
+      }
+
+      // provenance: point at an extracted field to light up where it came from
+      const setHL = (key, on) => {
+        const b = boxes.find(x => x.key === key);
+        if (b) b.el.classList.toggle("hl", on);
+        if (groups[key]) groups[key].g.classList.toggle("hl", on);
+        if (targets[key]) targets[key].classList.toggle("hl", on);
+      };
+      Object.entries(targets).forEach(([key, el]) => {
+        el.addEventListener("pointerenter", () => setHL(key, true));
+        el.addEventListener("pointerleave", () => setHL(key, false));
+      });
+
+      // lens: show the raw scan under the pointer
+      sheet.addEventListener("pointermove", ev => {
+        if (!done) return;
+        const r = sheet.getBoundingClientRect();
+        lens = { x: (ev.clientX - r.left) / r.width * e.W, y: (ev.clientY - r.top) / r.height * e.H, r: e.W * .16 };
+        if (!lensRaf) lensRaf = requestAnimationFrame(tm => { lensRaf = 0; draw(Math.floor(tm / 70)); });
+      });
+      sheet.addEventListener("pointerleave", () => { lens = null; if (done) draw(0); });
+
+      const onWide = () => {
+        heroEl.classList.remove("linking");
+        Object.values(targets).forEach(tg => tg.classList.add("got"));
+        if (wide.matches) { boxes.forEach(b => { if (b.hit && groups[b.key]) groups[b.key].g.style.display = ""; }); place(); }
+      };
+      if (wide.addEventListener) wide.addEventListener("change", onWide);
+
+      e.build();
+      return { run, place, renderStatus, resize() { e.build(); draw(0); place(); } };
+    }
+
+    /* ===================== Pipeline storyboards ===================== */
+    function Storyboard(root) {
+      const key = root.dataset.story;
+      const e = Engine($(".media canvas", root), SCENES[key], 2);
+      const stages = STAGES[key];
+      const tabs = $$('[role="tab"]', root), panel = $('[role="tabpanel"]', root);
+      let cur = Math.max(0, tabs.findIndex(tb => tb.getAttribute("aria-selected") === "true"));
+      let shown = null, raf = 0, built = false;
+
+      const render = k => { const out = new Uint32Array(e.W * e.H); stages[k](Pix(e, out)); return out; };
+      function build() { e.build(); shown = render(cur); e.buf.set(shown); e.blit(); built = true; }
+
+      // a quick scan wipe from one state to another
+      function wipe(from, to) {
+        cancelAnimationFrame(raf);
+        if (reduce) { e.buf.set(to); e.blit(); return; }
+        const t0 = performance.now(), dur = 420;
+        const step = now => {
+          const p = Math.min(1, (now - t0) / dur), row = Math.round((1 - (1 - p) * (1 - p)) * (e.H + 3)) - 1;
+          const { W, H, buf, dark } = e;
+          for (let y = 0; y < H; y++) {
+            const o = y * W;
+            if (p < 1 && Math.abs(y - row) < 1) {
+              for (let x = 0; x < W; x++) buf[o + x] = (dark[o + x] > .04 || hash(x, y, 7) > .6) ? COL.signal : COL.paper;
+            } else buf.set((y < row ? to : from).subarray(o, o + W), o);
+          }
+          e.blit();
+          if (p < 1) raf = requestAnimationFrame(step);
+        };
+        raf = requestAnimationFrame(step);
+      }
+
+      function select(k, focus) {
+        if (k === cur) { if (focus) tabs[k].focus(); return; }
+        tabs.forEach((tb, i) => { const on = i === k; tb.setAttribute("aria-selected", on ? "true" : "false"); tb.tabIndex = on ? 0 : -1; });
+        if (focus) tabs[k].focus();
+        panel.setAttribute("aria-labelledby", tabs[k].id);
+        panel.querySelector("p").textContent = noteOf(tabs[k]);
+        cur = k;
+        if (!built) return;
+        const from = shown;
+        shown = render(k);
+        wipe(from, shown);
+      }
+
+      tabs.forEach((tb, i) => {
+        tb.addEventListener("click", () => select(i));
+        tb.addEventListener("keydown", ev => {
+          const dir = { ArrowDown: 1, ArrowUp: -1 }[ev.key];
+          if (dir) { ev.preventDefault(); select((cur + dir + tabs.length) % tabs.length, true); }
+          else if (ev.key === "Home") { ev.preventDefault(); select(0, true); }
+          else if (ev.key === "End") { ev.preventDefault(); select(tabs.length - 1, true); }
+        });
+      });
+      return {
+        build,
+        resize() { if (built) build(); },
+        // replay the current stage from the raw scan, used when its slide comes into view
+        reveal() { if (built && !reduce) wipe(render(0), shown); },
+      };
+    }
+
+    /* ===================== Selected work slider ===================== */
+    (function Showcase() {
+      const root = $("#showcase");
+      const tabs = $$(".show-tab", root), slides = $$(".slide", root), counter = $(".counter b", root);
+      let cur = -1;
+      function show(k, focus) {
+        k = (k + slides.length) % slides.length;
+        const changed = k !== cur;
+        tabs.forEach((tb, i) => { const on = i === k; tb.setAttribute("aria-selected", on ? "true" : "false"); tb.tabIndex = on ? 0 : -1; });
+        slides.forEach((s, i) => { const on = i === k; s.classList.toggle("on", on); s.inert = !on; });
+        counter.textContent = String(k + 1).padStart(2, "0");
+        if (focus) tabs[k].focus();
+        if (changed && cur !== -1) {
+          const bar = tabs[k].parentElement, tl = tabs[k].offsetLeft, tw = tabs[k].offsetWidth;
+          if (tl < bar.scrollLeft || tl + tw > bar.scrollLeft + bar.clientWidth) bar.scrollTo({ left: Math.max(0, tl - 16), behavior: reduce ? "auto" : "smooth" });
+          slides.forEach((s, i) => { if (i !== k) $$("details", s).forEach(d => { d.open = false; }); });
+          const st = $(".story", slides[k]);
+          if (st && st._board) st._board.reveal();
+        }
+        cur = k;
+      }
+      tabs.forEach((tb, i) => {
+        tb.addEventListener("click", () => show(i));
+        tb.addEventListener("keydown", ev => {
+          const dir = { ArrowRight: 1, ArrowLeft: -1 }[ev.key];
+          if (dir) { ev.preventDefault(); show(cur + dir, true); }
+          else if (ev.key === "Home") { ev.preventDefault(); show(0, true); }
+          else if (ev.key === "End") { ev.preventDefault(); show(slides.length - 1, true); }
+        });
+      });
+      $$(".arrow", root).forEach(b => b.addEventListener("click", () => show(cur + Number(b.dataset.dir))));
+      // swipe on touch screens
+      const area = $(".slides", root);
+      let sx = 0, sy = 0, tracking = false;
+      area.addEventListener("pointerdown", ev => { if (ev.pointerType !== "touch") return; sx = ev.clientX; sy = ev.clientY; tracking = true; });
+      area.addEventListener("pointerup", ev => {
+        if (!tracking) return;
+        tracking = false;
+        const dx = ev.clientX - sx, dy = ev.clientY - sy;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) show(cur + (dx < 0 ? 1 : -1));
+      });
+      area.addEventListener("pointercancel", () => { tracking = false; });
+      show(0);
+    })();
+
+    // print every case study in full
+    addEventListener("beforeprint", () => $$("details.more").forEach(d => { d._wasOpen = d.open; d.open = true; }));
+    addEventListener("afterprint", () => $$("details.more").forEach(d => { d.open = !!d._wasOpen; }));
+
+    /* ===================== Command palette ===================== */
+    const pal = $("#palette"), q = $("#pal-q"), list = $("#pal-list");
+    const isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+    $$(".kbd-mod").forEach(k => { k.textContent = isMac ? "⌘" : "Ctrl"; });
+    const go = id => () => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); };
+    const GO = ["Go to", "Đi tới"], ACT = ["Actions", "Thao tác"];
+    const ACTIONS = [
+      { g: GO, l: ["Projects", "Dự án"], run: go("work") },
+      { g: GO, l: ["About", "Giới thiệu"], run: go("about") },
+      { g: GO, l: ["Experience", "Kinh nghiệm"], run: go("experience") },
+      { g: GO, l: ["Education", "Học vấn"], run: go("education") },
+      { g: GO, l: ["Publications", "Bài báo"], run: go("publications") },
+      { g: GO, l: ["Honors", "Thành tích"], run: go("honors") },
+      { g: GO, l: ["News", "Tin mới"], run: go("news") },
+      { g: GO, l: ["Contact", "Liên hệ"], run: go("contact") },
+      { g: ACT, l: ["Copy email address", "Sao chép email"], hint: EMAIL, run: copyEmail },
+      { g: ACT, l: ["Write an email", "Viết email"], run: () => { location.href = "mailto:" + EMAIL; } },
+      { g: ACT, l: ["Open resume", "Mở CV"], keys: "cv pdf", when: () => hasResume, run: () => window.open("resume.pdf", "_blank", "noopener") },
+      { g: ACT, l: ["Open GitHub profile", "Mở GitHub"], hint: "github.com/Tkd2007", run: () => window.open("https://github.com/Tkd2007", "_blank", "noopener") },
+      { g: ACT, l: () => (lang === "vi" ? "View in English" : "Xem bằng tiếng Việt"), keys: "language english vietnamese ngon ngu tieng viet tieng anh", run: () => setLang(lang === "vi" ? "en" : "vi") },
+      { g: ACT, l: () => theme() === "dark" ? t("Switch to light theme", "Chuyển sang giao diện sáng") : t("Switch to dark theme", "Chuyển sang giao diện tối"), keys: "theme dark light giao dien toi sang", run: toggleTheme },
+      { g: ACT, l: ["Replay the scan", "Xem lại hiệu ứng scan"], run: () => { scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }); if (hero) hero.run(); } },
+      { g: ACT, l: ["View this site's source", "Xem mã nguồn trang này"], keys: "code", run: () => window.open(REPO, "_blank", "noopener") },
+    ];
+    const label = a => typeof a.l === "function" ? a.l() : (lang === "vi" ? a.l[1] : a.l[0]);
+    const haystack = a => [typeof a.l === "function" ? a.l() : a.l.join(" "), a.hint || "", a.keys || "", a.g.join(" ")].join(" ");
+    const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/gi, "d").toLowerCase();
+    let shownActions = [], active = 0;
+
+    function setActive(i) {
+      active = i;
+      $$(".pal-item", list).forEach((li, j) => li.setAttribute("aria-selected", j === i ? "true" : "false"));
+      const li = $("#pal-opt-" + i);
+      if (li) { q.setAttribute("aria-activedescendant", li.id); li.scrollIntoView({ block: "nearest" }); }
+    }
+    function renderList() {
+      const term = norm(q.value.trim());
+      shownActions = ACTIONS.filter(a => (!a.when || a.when()) && (!term || norm(haystack(a)).includes(term)));
+      list.textContent = "";
+      if (!shownActions.length) {
+        const li = document.createElement("li");
+        li.className = "pal-empty"; li.setAttribute("role", "presentation");
+        li.textContent = t("No action matches. Try “email”, “projects” or “theme”.", "Không có thao tác phù hợp. Thử “email”, “dự án” hoặc “giao diện”.");
+        list.append(li); q.removeAttribute("aria-activedescendant");
+        return;
+      }
+      let group = "";
+      shownActions.forEach((a, i) => {
+        const gName = lang === "vi" ? a.g[1] : a.g[0];
+        if (gName !== group) {
+          group = gName;
+          const g = document.createElement("li");
+          g.className = "pal-group"; g.setAttribute("role", "presentation"); g.textContent = group;
+          list.append(g);
+        }
+        const li = document.createElement("li");
+        li.className = "pal-item"; li.id = "pal-opt-" + i; li.setAttribute("role", "option");
+        const name = document.createElement("span"); name.textContent = label(a); li.append(name);
+        if (a.hint) { const h = document.createElement("span"); h.className = "hint"; h.textContent = a.hint; li.append(h); }
+        li.addEventListener("pointermove", () => { if (active !== i) setActive(i); });
+        li.addEventListener("click", () => runAction(i));
+        list.append(li);
+      });
+      setActive(Math.min(active, shownActions.length - 1));
+    }
+    function openPal() { if (pal.open) return; q.value = ""; active = 0; renderList(); pal.showModal(); q.focus(); }
+    function closePal() { if (pal.open) pal.close(); }
+    function runAction(i) { const a = shownActions[i]; if (!a) return; closePal(); a.run(); }
+    pal.addEventListener("click", ev => { if (ev.target === pal) closePal(); });
+    q.addEventListener("input", () => { active = 0; renderList(); });
+    q.addEventListener("keydown", ev => {
+      const n = shownActions.length;
+      if (ev.key === "ArrowDown" && n) { ev.preventDefault(); setActive((active + 1) % n); }
+      else if (ev.key === "ArrowUp" && n) { ev.preventDefault(); setActive((active - 1 + n) % n); }
+      else if (ev.key === "Enter") { ev.preventDefault(); runAction(active); }
+    });
+    document.addEventListener("keydown", ev => {
+      if ((ev.metaKey || ev.ctrlKey) && ev.key.toLowerCase() === "k") { ev.preventDefault(); pal.open ? closePal() : openPal(); }
+    });
+    $$("[data-open-palette]").forEach(b => b.addEventListener("click", openPal));
+
+    /* ===================== Language ===================== */
+    let savedLang = null;
+    try { savedLang = localStorage.getItem("lang"); } catch (e) {}
+    applyLang(savedLang || (/^vi\b/i.test(navigator.language || "") ? "vi" : "en"));
+
+    /* ===================== Boot ===================== */
+    let late = false;
+    const fontsReady = (() => {
+      if (!document.fonts || !document.fonts.load) return Promise.resolve();
+      const loads = ["400", "500", "600", "700", "italic 400"].map(w => document.fonts.load(`${w} 16px "Be Vietnam Pro"`, "Ầ ạ"));
+      const all = Promise.all(loads).catch(() => {});
+      return Promise.race([all, new Promise(r => setTimeout(() => { late = true; r(); }, 1500))]);
+    })();
+
+    fontsReady.then(() => {
+      hero = Hero();
+      hero.run();
+      const io = new IntersectionObserver(entries => entries.forEach(en => {
+        if (en.isIntersecting) { en.target._board.build(); io.unobserve(en.target); }
+      }), { rootMargin: "300px 0px" });
+      $$(".story").forEach(el => { const b = Storyboard(el); el._board = b; boards.push(b); io.observe(el); });
+      // if the web font arrived after we stopped waiting, redraw with it
+      if (late && document.fonts) document.fonts.ready.then(() => { hero.resize(); boards.forEach(b => b.resize()); });
+    });
+
+    let resizeTimer = 0;
+    addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => { if (hero) hero.resize(); boards.forEach(b => b.resize()); }, 150);
+    });
+  })();
+  </script>
+</body>
+</html>
